@@ -69,6 +69,21 @@ public class Matrix {
         }
         return false;
     }
+
+    /**
+     * returns true if the matrix m is an upper triangle matrix (the matrix of which elements below the diogonal are
+     * zero).*/
+    public static boolean isUpperTriangle(Matrix m) {
+        for (int i = 1; i < m.getRowNum(); i++) {
+            for (int j = 0; j < i; j++) {
+                if (m.getElement(i, j) != 0) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     /**
      * Return a boolean that represent whether the matrix passed is an echelon, reduced echelon or neither. The function
      * will pass an argument of type Matrix and a boolean to indicate whether the desired validation is for a reduced
@@ -241,7 +256,7 @@ public class Matrix {
      * Returns a determinant of a matrix m, if the amount of element is zero it will return 0, if the element is 1 then
      * it will return that element. Otherwise, it will return the determinant using cofactor recursion.
      */
-    public static double determinant(Matrix m) {
+    public static double getCofactorDeterminant(Matrix m) {
         int curRow, curCol, pivot;
         double d;
         Matrix c;
@@ -269,12 +284,67 @@ public class Matrix {
                     curRow++;
                 }
                 if (Math.floorDiv(j, 2) == 1) {
-                    d = d - (m.getElement(pivot, j) * determinant(c));
+                    d = d - (m.getElement(pivot, j) * getCofactorDeterminant(c));
                 } else {
-                    d = d + (m.getElement(pivot, j) * determinant(c));
+                    d = d + (m.getElement(pivot, j) * getCofactorDeterminant(c));
                 }
             }
             return d;
         }
+    }
+
+    /**
+     * Turns the matrix passed into an upper triangle form. Assumed the matrix passed is not empty and the current form
+     * of the matrix is not an upper triangle. Returns the amount of swaps that occur in the conversion
+     */
+    public static int toUpperTriangle(Matrix m) {
+        int pivot = 0, swaps = 0;
+        double multiplier;
+        double[] temp;
+
+        for (int i = 0; i < m.getRowNum(); i++) {
+            if (m.getElement(i, pivot) == 0) {
+                for (int j = i + 1; j < m.getRowNum(); j++) {
+                    if (m.getElement(j, pivot) != 0) {
+                        temp = m.getMem()[j];
+                        m.setRow(j, m.getMem()[i]);
+                        m.setRow(i, temp);
+                        swaps += 1;
+                        break;
+                    }
+                }
+            }
+            for (int j = i + 1; j < m.getRowNum(); j++) {
+                multiplier = m.getElement(j, pivot) / m.getElement(i, pivot);
+                for (int k = 0; k < m.getColNum(); k++) {
+                    m.setElement(j, k, m.getElement(j, k) - multiplier * m.getElement(i, k));
+                }
+            }
+            pivot += 1;
+        }
+        return swaps;
+    }
+
+    /**
+     * Returns the determinant of a matrix using the reduction algorithm. Returns 0 if the element is zero. If there is
+     * only one element in the matrix it will return that only element. Otherwise, it will return the sum multiplication
+     * of the elements in the matrix's diagonal
+     */
+    public static double getDeterminantReduction(Matrix m) {
+        int n;
+        double d;
+        if (countElement(m) == 0) {
+            return 0;
+        } else if (countElement(m) == 1) {
+            return m.getElement(0, 0);
+        } else {
+            n = toUpperTriangle(m);
+            d = m.getElement(0, 0);
+            for (int i = 1; i < m.getRowNum(); i++) {
+                d *= m.getElement(i, i);
+            }
+            d *= Math.pow(-1, n);
+        }
+        return d;
     }
 }
