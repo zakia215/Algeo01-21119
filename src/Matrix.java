@@ -204,22 +204,20 @@ public class Matrix {
             for (int k = 0; k < m.getColNum(); k++) {
                 m.setElement(i, k, (m.getElement(i, k) / divider));
             }
-            for (int k = i + 1; k < m.getRowNum(); k++) {
+            if (reduced) {
+                lastRow = 0;
+            } else {
+                lastRow = i + 1;
+            }
+            for (int k = lastRow; k < m.getRowNum(); k++) {
                 multiplier = m.getElement(k, pivot);
-                for (int l = 0; l < m.getColNum(); l++) {
-                    m.setElement(k, l, (m.getElement(k, l) - multiplier * m.getElement(i, l)));
+                if (k != i) {
+                    for (int l = 0; l < m.getColNum(); l++) {
+                        m.setElement(k, l, (m.getElement(k, l) - multiplier * m.getElement(i, l)));
+                    }
                 }
             }
             pivot += 1;
-        }
-
-    }
-
-    public static void gaussElimination(Matrix a) {
-        while (!isEchelon(a, false)) {
-            for (int i = 0; i < a.getRowNum(); i++) {
-
-            }
         }
     }
 }
