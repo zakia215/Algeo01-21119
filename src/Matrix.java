@@ -31,6 +31,9 @@ public class Matrix {
     public void setMem(double[][] mem) {
         this.mem = mem;
     }
+    public void setRow(int i, double[] row) {
+        this.mem[i] = row;
+    }
     public void setElement(int i, int j, double value) {
         this.mem[i][j] = value;
     }
@@ -178,5 +181,45 @@ public class Matrix {
             }
         }
         return res;
+    }
+
+    /**
+     * */
+    public static void toEchelon(Matrix m, boolean reduced) {
+        int pivot = 0, lastRow = 0;
+        double divider = 0;
+        double[] temp = new double[m.getColNum()];
+        for (int i = 0; i < m.getRowNum(); i++) {
+            if (m.getElement(i, pivot) == 0) {
+                for (int k = i + 1; k < m.getRowNum(); k++) {
+                    if (m.getElement(k, pivot) != 0) {
+                        temp = m.getMem()[k];
+                        m.setRow(k, m.getMem()[i]);
+                        m.setRow(i, temp);
+                        break;
+                    }
+                }
+            } else {
+                divider = m.getElement(i, pivot);
+                for (int k = 0; k < m.getColNum(); k++) {
+                    m.setElement(i, k, (m.getElement(i, k) / divider));
+                }
+                for (int k = i + 1; k < m.getRowNum(); k++) {
+                    for (int l = 0; l < m.getColNum(); l++) {
+                        m.setElement(k, l, (m.getElement(k, l) - (m.getElement(k, pivot) * m.getElement(i, l))));
+                    }
+                }
+            }
+            pivot += 1;
+        }
+
+    }
+
+    public static void gaussElimination(Matrix a) {
+        while (!isEchelon(a, false)) {
+            for (int i = 0; i < a.getRowNum(); i++) {
+
+            }
+        }
     }
 }
