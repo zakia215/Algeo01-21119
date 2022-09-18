@@ -187,7 +187,7 @@ public class Matrix {
      * */
     public static void toEchelon(Matrix m, boolean reduced) {
         int pivot = 0, lastRow = 0;
-        double divider = 0;
+        double divider = 0, multiplier = 0;
         double[] temp = new double[m.getColNum()];
         for (int i = 0; i < m.getRowNum(); i++) {
             if (m.getElement(i, pivot) == 0) {
@@ -199,15 +199,15 @@ public class Matrix {
                         break;
                     }
                 }
-            } else {
-                divider = m.getElement(i, pivot);
-                for (int k = 0; k < m.getColNum(); k++) {
-                    m.setElement(i, k, (m.getElement(i, k) / divider));
-                }
-                for (int k = i + 1; k < m.getRowNum(); k++) {
-                    for (int l = 0; l < m.getColNum(); l++) {
-                        m.setElement(k, l, (m.getElement(k, l) - (m.getElement(k, pivot) * m.getElement(i, l))));
-                    }
+            }
+            divider = m.getElement(i, pivot);
+            for (int k = 0; k < m.getColNum(); k++) {
+                m.setElement(i, k, (m.getElement(i, k) / divider));
+            }
+            for (int k = i + 1; k < m.getRowNum(); k++) {
+                multiplier = m.getElement(k, pivot);
+                for (int l = 0; l < m.getColNum(); l++) {
+                    m.setElement(k, l, (m.getElement(k, l) - multiplier * m.getElement(i, l)));
                 }
             }
             pivot += 1;
