@@ -76,7 +76,7 @@ public class Matrix {
      */
     public static boolean isEchelon(Matrix m, boolean reduced) {
         int oneCol = 0;
-        boolean hasSeenOne = false;
+        boolean hasSeenOne;
         for (int i = 0; i < m.getRowNum(); i++) {
             hasSeenOne = false;
             for (int j = 0; j < m.getColNum(); j++) {
@@ -130,6 +130,19 @@ public class Matrix {
     }
 
     /**
+     * returns the amount of element in a matrix
+     */
+    public static int countElement(Matrix m) {
+        int count = 0;
+        for (int i = 0; i < m.getRowNum(); i++) {
+            for (int j = 0; j < m.getColNum(); j++) {
+                count += 1;
+            }
+        }
+        return count;
+    }
+
+    /**
      * Adding two matrices of which size is not yet confirmed,
      * will return a matrix of size m1.getRowNum() * m1.getColNum() if the size are different
      */
@@ -144,6 +157,7 @@ public class Matrix {
         }
         return res;
     }
+
     /**
      * Adding two matrices of which size is not yet confirmed,
      * will return a matrix of size m1.getRowNum() * m1.getColNum() if the size are different.
@@ -159,6 +173,7 @@ public class Matrix {
         }
         return res;
     }
+
     public Matrix multiply(Matrix m1, Matrix m2) {
         double temp;
         Matrix res = new Matrix(m1.getRowNum(), m2.getColNum());
@@ -184,11 +199,12 @@ public class Matrix {
     }
 
     /**
+     * return an echelon or a reduced echelon form of the passed matrix depending on the value of the reduced parameter
      * */
     public static void toEchelon(Matrix m, boolean reduced) {
-        int pivot = 0, lastRow = 0;
-        double divider = 0, multiplier = 0;
-        double[] temp = new double[m.getColNum()];
+        int pivot = 0, lastRow;
+        double divider, multiplier;
+        double[] temp;
         for (int i = 0; i < m.getRowNum(); i++) {
             if (m.getElement(i, pivot) == 0) {
                 for (int k = i + 1; k < m.getRowNum(); k++) {
@@ -218,6 +234,47 @@ public class Matrix {
                 }
             }
             pivot += 1;
+        }
+    }
+
+    /**
+     * Returns a determinant of a matrix m, if the amount of element is zero it will return 0, if the element is 1 then
+     * it will return that element. Otherwise, it will return the determinant using cofactor recursion.
+     */
+    public static double determinant(Matrix m) {
+        int curRow, curCol, pivot;
+        double d;
+        Matrix c;
+        if (countElement(m) == 0) {
+            return 0;
+        } else if (countElement(m) == 1) {
+            return m.getElement(0, 0);
+        } else if (countElement(m) == 4) {
+            d = m.getElement(0, 0) * m.getElement(1, 1) - m.getElement(0, 1) * m.getElement(1, 0);
+            return d;
+        } else {
+            pivot = 0;
+            d = 0;
+            for (int j = 0; j < m.getColNum(); j++) {
+                curRow = 0;
+                c = new Matrix((m.getRowNum() - 1), (m.getColNum() - 1));
+                for (int k = 0; k < m.getRowNum(); k++) {
+                    curCol = 0;
+                    for (int l = 0; l < m.getColNum(); l++) {
+                        if (l != j && k != pivot) {
+                            c.setElement(curRow, curCol, (m.getElement(k, l)));
+                            curCol++;
+                        }
+                    }
+                    curRow++;
+                }
+                if (Math.floorDiv(j, 2) == 1) {
+                    d = d - (m.getElement(pivot, j) * determinant(c));
+                } else {
+                    d = d + (m.getElement(pivot, j) * determinant(c));
+                }
+            }
+            return d;
         }
     }
 }
