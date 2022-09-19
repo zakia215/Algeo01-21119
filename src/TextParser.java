@@ -6,9 +6,13 @@ public class TextParser {
     private String lines;
     private Matrix parsedMatrix;
 
-    public TextParser(String filePath) { this.filePath = filePath; }
+    public TextParser(String filePath) {
+        this.filePath = filePath;
+    }
 
-    public void setFilePath(String filePath) { this.filePath = filePath; }
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
 
     public void setLines(String lines) {
         this.lines = lines;
@@ -30,7 +34,7 @@ public class TextParser {
 
     /**
      * readLines() passes no parameter and return the number of lines that are in the txt file. Assumed the filePath 
-     * field is not empty. Also sets the lines field with all the lines in the text file
+     * field is not empty. Also sets the lines field with all the lines in the text file seperated by a new line.
      */
     public int readLines() {
         int i = 0;

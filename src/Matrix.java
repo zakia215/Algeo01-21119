@@ -4,6 +4,8 @@ public class Matrix {
     private double[][] mem;
     private int rowNum;
     private int colNum;
+    private double determinant;
+    private Matrix inverse;
 
 
     // Constructor
@@ -26,6 +28,12 @@ public class Matrix {
     public double getElement(int i, int j) {
         return this.mem[i][j];
     }
+    public double getDeterminant() {
+        return this.determinant;
+    }
+    public Matrix getInverse() {
+        return this.inverse;
+    }
 
     // Setter
     public void setMem(double[][] mem) {
@@ -42,6 +50,12 @@ public class Matrix {
     }
     public void setColNum(int colNum) {
         this.colNum = colNum;
+    }
+    public void setDeterminant(double determinant) {
+        this.determinant = determinant;
+    }
+    public void setInverse(Matrix inverse) {
+        this.inverse = inverse;
     }
 
     // Matrix Validation
@@ -118,7 +132,9 @@ public class Matrix {
         return true;
     }
 
-    // Terminal Access
+    /**
+     * Return a matrix object after input is being read in the terminal.
+     */
     public static Matrix readMatrix() {
         int row, col;
         Scanner matrixInput = new Scanner(System.in);
@@ -141,17 +157,17 @@ public class Matrix {
             for (int j = 0; j < m.getColNum(); j++) {
                 System.out.print(m.getElement(i, j) + " ");
             }
-            System.out.println("");
+            System.out.println();
         }
     }
 
     /**
      * returns the amount of element in a matrix
      */
-    public static int countElement(Matrix m) {
+    public int countElement() {
         int count = 0;
-        for (int i = 0; i < m.getRowNum(); i++) {
-            for (int j = 0; j < m.getColNum(); j++) {
+        for (int i = 0; i < getRowNum(); i++) {
+            for (int j = 0; j < getColNum(); j++) {
                 count += 1;
             }
         }
@@ -204,10 +220,27 @@ public class Matrix {
         }
         return res;
     }
-    public Matrix transpose(Matrix m) {
+
+    /**
+     * Returns a matrix after being multiplied by a constant.
+     */
+    public static Matrix multiplyByConstant(Matrix m, double c) {
+        Matrix a = new Matrix(m.getRowNum(), m.getColNum());
+        for (int i = 0; i < m.getRowNum(); i++) {
+            for (int j = 0; j < m.getColNum(); j++) {
+                a.setElement(i, j, (c * m.getElement(i, j)));
+            }
+        }
+        return a;
+    }
+
+    /**
+     * Returns a matrix after the matrix passed in the argument has been transposed.
+     */
+    public static Matrix transpose(Matrix m) {
         Matrix res = new Matrix(m.getRowNum(), m.getColNum());
         for (int i = 0; i < m.getRowNum(); i++) {
-            for (int j = 0; j < getColNum(); j++) {
+            for (int j = 0; j < m.getColNum(); j++) {
                 res.setElement(j, i, m.getElement(i, j));
             }
         }
@@ -261,12 +294,12 @@ public class Matrix {
         int curRow, curCol, pivot;
         double d;
         Matrix c;
-        if (countElement(m) == 0) {
+        if (m.countElement() == 0) {
             return 0;
-        } else if (countElement(m) == 1) {
+        } else if (m.countElement() == 1) {
             return m.getElement(0, 0);
-        } else if (countElement(m) == 4) {
-            d = m.getElement(0, 0) * m.getElement(1, 1) - m.getElement(0, 1) * m.getElement(1, 0);
+        } else if (m.countElement() == 4) {
+            d = (m.getElement(0, 0) * m.getElement(1, 1)) - (m.getElement(0, 1) * m.getElement(1, 0));
             return d;
         } else {
             pivot = 0;
@@ -274,22 +307,23 @@ public class Matrix {
             for (int j = 0; j < m.getColNum(); j++) {
                 curRow = 0;
                 c = new Matrix((m.getRowNum() - 1), (m.getColNum() - 1));
-                for (int k = 0; k < m.getRowNum(); k++) {
+                for (int k = 1; k < m.getRowNum(); k++) {
                     curCol = 0;
                     for (int l = 0; l < m.getColNum(); l++) {
-                        if (l != j && k != pivot) {
+                        if (l != j) {
                             c.setElement(curRow, curCol, (m.getElement(k, l)));
-                            curCol++;
+                            curCol += 1;
                         }
                     }
-                    curRow++;
+                    curRow += 1;
                 }
-                if (Math.floorDiv(j, 2) == 1) {
+                if (Math.floorMod(j, 2) == 1) {
                     d = d - (m.getElement(pivot, j) * getCofactorDeterminant(c));
                 } else {
                     d = d + (m.getElement(pivot, j) * getCofactorDeterminant(c));
                 }
             }
+            m.setDeterminant(d);
             return d;
         }
     }
@@ -334,9 +368,9 @@ public class Matrix {
     public static double getDeterminantReduction(Matrix m) {
         int n;
         double d;
-        if (countElement(m) == 0) {
+        if (m.countElement() == 0) {
             return 0;
-        } else if (countElement(m) == 1) {
+        } else if (m.countElement() == 1) {
             return m.getElement(0, 0);
         } else {
             n = toUpperTriangle(m);
@@ -346,6 +380,72 @@ public class Matrix {
             }
             d *= Math.pow(-1, n);
         }
+        m.setDeterminant(d);
         return d;
+    }
+
+    /**
+     * Returns the augmented matrix of m1 and m2 with m2 on the right of m1. Assumed that both matrices has the same
+     * number of rows.
+     */
+    public static Matrix augment(Matrix m1, Matrix m2) {
+        Matrix augmented = new Matrix(m1.getRowNum(), (m1.getColNum() + m2.getColNum()));
+        for (int i = 0; i < m1.getRowNum(); i++) {
+            for (int j = 0; j < m1.getColNum(); j++) {
+                augmented.setElement(i, j, m1.getElement(i, j));
+            }
+        }
+        for (int i = 0; i < m2.getRowNum(); i++) {
+            for (int j = 0; j < m2.getColNum(); j++) {
+                augmented.setElement(i, (j + m1.getColNum()), m2.getElement(i, j));
+            }
+        }
+        return augmented;
+    }
+
+    /**
+     * Returns a cofactor matrix of the matrix that is passed. Assumed that matrix m is symmetric.
+     */
+    public static Matrix cofactor(Matrix m) {
+        Matrix cofactor = new Matrix(m.getRowNum(), m.getColNum());
+        Matrix subMatrix = new Matrix((m.getRowNum() - 1), (m.getColNum() - 1));
+        int curRow, curCol;
+        double subMatrixDet;
+        for (int i = 0; i < m.getRowNum(); i++) {
+            for (int j = 0; j < m.getColNum(); j++) {
+                curRow = 0;
+                for (int k = 0; k < m.getRowNum(); k++) {
+                    if (k != i) {
+                        curCol = 0;
+                        for (int l = 0; l < m.getColNum(); l++) {
+                            if (l != j) {
+                                subMatrix.setElement(curRow, curCol, m.getElement(k, l));
+                                curCol += 1;
+                            }
+                        }
+                        curRow += 1;
+                    }
+                }
+                subMatrixDet = getCofactorDeterminant(subMatrix);
+                if (Math.floorMod((i + j), 2) == 1) {
+                    subMatrixDet *= -1;
+                }
+                cofactor.setElement(i, j, subMatrixDet);
+            }
+        }
+        return cofactor;
+    }
+
+    /**
+     * Returns the inverse of m assuming that the determinant is not zero.
+     */
+    public static Matrix inverseAdjoin(Matrix m) {
+        Matrix inverted;
+        double detInverted;
+        detInverted = 1 / getCofactorDeterminant(m);
+        inverted = cofactor(m);
+        inverted = transpose(inverted);
+        inverted = multiplyByConstant(inverted, detInverted);
+        return inverted;
     }
 }
