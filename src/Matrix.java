@@ -133,6 +133,7 @@ public class Matrix {
                 res.setElement(i, j, matrixInput.nextDouble());
             }
         }
+        matrixInput.close();
         return res;
     }
     public static void displayMatrix(Matrix m) {

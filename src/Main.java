@@ -1,9 +1,9 @@
 public class Main {
     public static void main(String[] args) {
-        Matrix A = Matrix.readMatrix();
-        double detA = Matrix.getDeterminantReduction(A);
-        System.out.println(detA);
-        Matrix.toUpperTriangle(A);
-        Matrix.displayMatrix(A);
+        String filePath = "D:\\ITB\\Semester 3\\Aljabar Liniear dan Geometri\\Algeo01-21119\\test\\input_0a.txt";
+        TextParser testInput = new TextParser(filePath);
+        testInput.readLines();
+        testInput.parseMatrix();
+        Matrix.displayMatrix(testInput.getParsedMatrix());
     }
 }
