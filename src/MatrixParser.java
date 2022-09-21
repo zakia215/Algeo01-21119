@@ -1,13 +1,15 @@
 import java.io.*;
 import java.util.*;
 
-public class TextParser {
+public class MatrixParser {
     private String filePath;
     private String lines;
     private Matrix parsedMatrix;
 
-    public TextParser(String filePath) {
+    public MatrixParser(String filePath) {
         this.filePath = filePath;
+        readLines();
+        parseMatrix();
     }
 
     public void setFilePath(String filePath) {

@@ -254,20 +254,33 @@ public class Matrix {
         int pivot = 0, lastRow;
         double divider, multiplier;
         double[] temp;
+        boolean swapped;
         for (int i = 0; i < m.getRowNum(); i++) {
-            if (m.getElement(i, pivot) == 0) {
+            if (pivot > m.getColNum() - 1) {
+                break;
+            }
+            if (m.getElement(i, pivot) == 0 && i != m.getRowNum() - 1) {
+                swapped = false;
                 for (int k = i + 1; k < m.getRowNum(); k++) {
                     if (m.getElement(k, pivot) != 0) {
                         temp = m.getMem()[k];
                         m.setRow(k, m.getMem()[i]);
                         m.setRow(i, temp);
+                        swapped = true;
                         break;
                     }
                 }
+                if (!swapped) {
+                    pivot += 1;
+                }
             }
             divider = m.getElement(i, pivot);
-            for (int k = 0; k < m.getColNum(); k++) {
-                m.setElement(i, k, (m.getElement(i, k) / divider));
+            if (divider != 0) {
+                for (int k = 0; k < m.getColNum(); k++) {
+                    if (m.getElement(i, k) != 0) {
+                        m.setElement(i, k, (m.getElement(i, k) / divider));
+                    }
+                }
             }
             if (reduced) {
                 lastRow = 0;
@@ -437,12 +450,15 @@ public class Matrix {
     }
 
     /**
-     * Returns the inverse of m assuming that the determinant is not zero.
+     * Returns the inverse of m. If determinant is zero will return the passed matrix itself.
      */
     public static Matrix inverseAdjoin(Matrix m) {
         Matrix inverted;
-        double detInverted;
-        detInverted = 1 / getCofactorDeterminant(m);
+        double detInverted = getCofactorDeterminant(m);
+        if (detInverted == 0) {
+            return m;
+        }
+        detInverted = 1 / detInverted;
         inverted = cofactor(m);
         inverted = transpose(inverted);
         inverted = multiplyByConstant(inverted, detInverted);
