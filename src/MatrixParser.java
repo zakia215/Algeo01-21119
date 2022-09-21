@@ -4,7 +4,7 @@ import java.util.*;
 public class MatrixParser {
     private String filePath;
     private String lines;
-    private Matrix parsedMatrix;
+    private AugmentedMatrix parsedMatrix;
 
     public MatrixParser(String filePath) {
         this.filePath = filePath;
@@ -20,7 +20,7 @@ public class MatrixParser {
         this.lines = lines;
     }
 
-    public void setParsedMatrix(Matrix parsedMatrix) {
+    public void setParsedMatrix(AugmentedMatrix parsedMatrix) {
         this.parsedMatrix = parsedMatrix;
     }
 
@@ -30,7 +30,7 @@ public class MatrixParser {
         return lines;
     }
 
-    public Matrix getParsedMatrix() {
+    public AugmentedMatrix getParsedMatrix() {
         return parsedMatrix;
     }
 
@@ -77,7 +77,7 @@ public class MatrixParser {
      */
     public void parseMatrix() {
         int row = this.readLines(), col = getCol(getLines());
-        Matrix m = new Matrix(row, col);
+        AugmentedMatrix m = new AugmentedMatrix(row, col);
         Scanner doubleReader = new Scanner(getLines());
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < col; j++) {
