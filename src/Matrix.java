@@ -274,6 +274,9 @@ public class Matrix {
                     pivot += 1;
                 }
             }
+            if (pivot >= m.getColNum() - 1) {
+                break;
+            }
             divider = m.getElement(i, pivot);
             if (divider != 0) {
                 for (int k = 0; k < m.getColNum(); k++) {
@@ -464,4 +467,5 @@ public class Matrix {
         inverted = multiplyByConstant(inverted, detInverted);
         return inverted;
     }
+
 }
