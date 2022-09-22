@@ -8,66 +8,80 @@ public class Matrix {
     private Matrix inverse;
 
 
-    // Constructor
+    /* ***  CONSTRUCTOR *** */
     public Matrix(int row, int col) {
         this.colNum = col;
         this.rowNum = row;
         mem = new double[row][col];
     }
 
-    // Getter
+    /* ***  GETTER *** */
     public double[][] getMem() {
         return mem;
     }
+
     public int getRowNum() {
         return rowNum;
     }
+
     public int getColNum() {
         return colNum;
     }
+
     public double getElement(int i, int j) {
         return this.mem[i][j];
     }
+
     public double getDeterminant() {
         return this.determinant;
     }
+
     public Matrix getInverse() {
         return this.inverse;
     }
 
-    // Setter
+    /* ***  SETTER *** */
     public void setMem(double[][] mem) {
         this.mem = mem;
     }
+
     public void setRow(int i, double[] row) {
         this.mem[i] = row;
     }
+
     public void setElement(int i, int j, double value) {
         this.mem[i][j] = value;
     }
+
     public void setRowNum(int rowNum) {
         this.rowNum = rowNum;
     }
+
     public void setColNum(int colNum) {
         this.colNum = colNum;
     }
+
     public void setDeterminant(double determinant) {
         this.determinant = determinant;
     }
+
     public void setInverse(Matrix inverse) {
         this.inverse = inverse;
     }
 
-    // Matrix Validation
+    /* ***  MATRIX VALIDATION *** */
     public static boolean isMatrixSizeEqual(Matrix m1, Matrix m2) {
         return m1.getRowNum() == m2.getRowNum() && m1.getColNum() == m2.getRowNum();
     }
+
     public static boolean isMatrixMultipliable(Matrix m1, Matrix m2) {
         return m1.getColNum() == m2.getRowNum();
     }
+
     public static boolean isSymmetric(Matrix m) {
         return m.getColNum() == m.getRowNum();
     }
+
     public static boolean isIdentity(Matrix m) {
         if (isSymmetric(m)) {
             for (int i = 0; i < m.getRowNum(); i++) {
@@ -86,7 +100,7 @@ public class Matrix {
 
     /**
      * returns true if the matrix m is an upper triangle matrix (the matrix of which elements below the diogonal are
-     * zero).*/
+     * zero) */
     public static boolean isUpperTriangle(Matrix m) {
         for (int i = 1; i < m.getRowNum(); i++) {
             for (int j = 0; j < i; j++) {
@@ -101,8 +115,7 @@ public class Matrix {
     /**
      * Return a boolean that represent whether the matrix passed is an echelon, reduced echelon or neither. The function
      * will pass an argument of type Matrix and a boolean to indicate whether the desired validation is for a reduced
-     * or not reduced echelon.
-     */
+     * or not reduced echelon. */
     public static boolean isEchelon(Matrix m, boolean reduced) {
         int oneCol = 0;
         boolean hasSeenOne;
@@ -132,9 +145,10 @@ public class Matrix {
         return true;
     }
 
+    
+    /* ********** BACA dan TULIS dengan INPUT/OUTPUT device ********** */
     /**
-     * Return a matrix object after input is being read in the terminal.
-     */
+     * Return a matrix object after input is being read in the terminal. */
     public static Matrix readMatrix() {
         int row, col;
         Scanner matrixInput = new Scanner(System.in);
@@ -152,18 +166,24 @@ public class Matrix {
         matrixInput.close();
         return res;
     }
+
+    /**
+     * print element of matrix which each columns and row separated by whitespace */
     public static void displayMatrix(Matrix m) {
         for (int i = 0; i < m.getRowNum(); i++) {
             for (int j = 0; j < m.getColNum(); j++) {
-                System.out.print(m.getElement(i, j) + " ");
+                if (j != m.getColNum()){
+                    System.out.print(m.getElement(i, j) + " ");
+                } else {
+                    System.out.print(m.getElement(i, j));
+                }
             }
             System.out.println();
         }
     }
 
     /**
-     * returns the amount of element in a matrix
-     */
+     * returns the amount of element in a matrix */
     public int countElement() {
         int count = 0;
         for (int i = 0; i < getRowNum(); i++) {
@@ -176,8 +196,7 @@ public class Matrix {
 
     /**
      * Adding two matrices of which size is not yet confirmed,
-     * will return a matrix of size m1.getRowNum() * m1.getColNum() if the size are different
-     */
+     * will return a matrix of size m1.getRowNum() * m1.getColNum() if the size are different */
     public static Matrix add(Matrix m1, Matrix m2) {
         Matrix res = new Matrix(m1.getRowNum(), m1.getColNum());
         if (isMatrixSizeEqual(m1, m2)) {
@@ -191,9 +210,8 @@ public class Matrix {
     }
 
     /**
-     * Adding two matrices of which size is not yet confirmed,
-     * will return a matrix of size m1.getRowNum() * m1.getColNum() if the size are different.
-     */
+     * Substract two matrices of which size is not yet confirmed,
+     * will return a matrix of size m1.getRowNum() * m1.getColNum() if the size are different. */
     public static Matrix subtract(Matrix m1, Matrix m2) {
         Matrix res = new Matrix(m1.getRowNum(), m1.getColNum());
         if (isMatrixSizeEqual(m1, m2)) {
@@ -206,24 +224,28 @@ public class Matrix {
         return res;
     }
 
+    /**
+     * Multiply two matrices of which size is not yet confirmed,
+     * will return a matrix of size m1.getRowNum() * m2.getColNum() if m1.getColNum() != m2.getRowNum(). */
     public Matrix multiply(Matrix m1, Matrix m2) {
         double temp;
         Matrix res = new Matrix(m1.getRowNum(), m2.getColNum());
-        for (int i = 0; i < m1.getRowNum(); i++) {
-            for (int j = 0; j < m2.getColNum(); j++) {
-                temp = 0;
-                for (int k = 0; k < m1.getColNum(); k++) {
-                    temp += m1.getElement(i, k) * m2.getElement(k, i);
+        if (m1.getColNum() == m2.getRowNum()){
+            for (int i = 0; i < m1.getRowNum(); i++) {
+                for (int j = 0; j < m2.getColNum(); j++) {
+                    temp = 0;
+                    for (int k = 0; k < m1.getColNum(); k++) {
+                        temp += m1.getElement(i, k) * m2.getElement(k, i);
+                    }
+                    res.setElement(i, j, temp);
                 }
-                res.setElement(i, j, temp);
             }
         }
         return res;
     }
 
     /**
-     * Returns a matrix after being multiplied by a constant.
-     */
+     * Returns a matrix after being multiplied by a constant.   */
     public static Matrix multiplyByConstant(Matrix m, double c) {
         Matrix a = new Matrix(m.getRowNum(), m.getColNum());
         for (int i = 0; i < m.getRowNum(); i++) {
@@ -235,8 +257,7 @@ public class Matrix {
     }
 
     /**
-     * Returns a matrix after the matrix passed in the argument has been transposed.
-     */
+     * Returns a matrix after the matrix passed in the argument has been transposed. */
     public static Matrix transpose(Matrix m) {
         Matrix res = new Matrix(m.getRowNum(), m.getColNum());
         for (int i = 0; i < m.getRowNum(); i++) {
@@ -248,8 +269,7 @@ public class Matrix {
     }
 
     /**
-     * return an echelon or a reduced echelon form of the passed matrix depending on the value of the reduced parameter
-     * */
+     * return an echelon or a reduced echelon form of the passed matrix depending on the value of the reduced parameter */
     public static void toEchelon(Matrix m, boolean reduced) {
         int pivot = 0, lastRow;
         double divider, multiplier;
@@ -304,8 +324,7 @@ public class Matrix {
 
     /**
      * Returns a determinant of a matrix m, if the amount of element is zero it will return 0, if the element is 1 then
-     * it will return that element. Otherwise, it will return the determinant using cofactor recursion.
-     */
+     * it will return that element. Otherwise, it will return the determinant using cofactor recursion. */
     public static double getCofactorDeterminant(Matrix m) {
         int curRow, curCol, pivot;
         double d;
@@ -346,8 +365,7 @@ public class Matrix {
 
     /**
      * Turns the matrix passed into an upper triangle form. Assumed the matrix passed is not empty and the current form
-     * of the matrix is not an upper triangle. Returns the amount of swaps that occur in the conversion
-     */
+     * of the matrix is not an upper triangle. Returns the amount of swaps that occur in the conversion */
     public static int toUpperTriangle(Matrix m) {
         int pivot = 0, swaps = 0;
         double multiplier;
@@ -379,8 +397,7 @@ public class Matrix {
     /**
      * Returns the determinant of a matrix using the reduction algorithm. Returns 0 if the element is zero. If there is
      * only one element in the matrix it will return that only element. Otherwise, it will return the sum multiplication
-     * of the elements in the matrix's diagonal
-     */
+     * of the elements in the matrix's diagonal */
     public static double getDeterminantReduction(Matrix m) {
         int n;
         double d;
@@ -402,8 +419,7 @@ public class Matrix {
 
     /**
      * Returns the augmented matrix of m1 and m2 with m2 on the right of m1. Assumed that both matrices has the same
-     * number of rows.
-     */
+     * number of rows. */
     public static Matrix augment(Matrix m1, Matrix m2) {
         Matrix augmented = new Matrix(m1.getRowNum(), (m1.getColNum() + m2.getColNum()));
         for (int i = 0; i < m1.getRowNum(); i++) {
@@ -420,8 +436,7 @@ public class Matrix {
     }
 
     /**
-     * Returns a cofactor matrix of the matrix that is passed. Assumed that matrix m is symmetric.
-     */
+     * Returns a cofactor matrix of the matrix that is passed. Assumed that matrix m is symmetric. */
     public static Matrix cofactor(Matrix m) {
         Matrix cofactor = new Matrix(m.getRowNum(), m.getColNum());
         Matrix subMatrix = new Matrix((m.getRowNum() - 1), (m.getColNum() - 1));
@@ -453,8 +468,7 @@ public class Matrix {
     }
 
     /**
-     * Returns the inverse of m. If determinant is zero will return the passed matrix itself.
-     */
+     * Returns the inverse of m. If determinant is zero will return the passed matrix itself. */
     public static Matrix inverseAdjoin(Matrix m) {
         Matrix inverted;
         double detInverted = getCofactorDeterminant(m);
@@ -468,4 +482,5 @@ public class Matrix {
         return inverted;
     }
 
+    
 }

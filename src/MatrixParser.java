@@ -24,7 +24,9 @@ public class MatrixParser {
         this.parsedMatrix = parsedMatrix;
     }
 
-    public String getFilePath() { return filePath; }
+    public String getFilePath() { 
+        return filePath; 
+    }
 
     public String getLines() {
         return lines;
