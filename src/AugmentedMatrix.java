@@ -115,13 +115,32 @@ public class AugmentedMatrix extends Matrix {
         return Double.parseDouble(this.solution[i][j]);
     }
 
-    public static boolean allZeroButOne(AugmentedMatrix m, int row) {
-        for (int i = 0; i < m.getColNum() - 1; i++) {
-            if (m.getElement(row, i) != 0) {
-                return false;
+    public static boolean isThereAllZeroButLastOne(AugmentedMatrix m) {
+        boolean yes = false;
+        for(int i = 0; i < m.getRowNum(); i++) {
+            for (int j = 0; j < m.getColNum(); j++) {
+                if (j != m.getColNum()-1){
+                    if (m.getElement(i, j) != 0){
+                        yes = false;
+                        break;
+                    } else {
+                        yes = true;
+                    }
+                }
+                if (yes && j == m.getColNum()-1) {
+                    if (m.getElement(i, j) != 0){
+                        yes = true;
+                        break;
+                    } else {
+                        yes = false;
+                    }
+                } 
+            }
+            if (yes) {
+                break;
             }
         }
-        return (m.getElement(row, (m.getColNum() - 1)) != 0);
+        return yes;
     }
 
     public static void getSolutionString(AugmentedMatrix m, int params) {
@@ -194,6 +213,6 @@ public class AugmentedMatrix extends Matrix {
     }
 
     public static boolean hasNoSolution(AugmentedMatrix m) {
-        return (allZeroButOne(m, (m.getRowNum() - 1)));
+        return (isThereAllZeroButLastOne(m));
     }
 }

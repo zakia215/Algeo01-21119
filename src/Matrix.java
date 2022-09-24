@@ -1,5 +1,7 @@
 import java.util.*;
 
+// import java.io.*;
+
 public class Matrix {
     private double[][] mem;
     private int rowNum;
@@ -78,12 +80,12 @@ public class Matrix {
         return m1.getColNum() == m2.getRowNum();
     }
 
-    public static boolean isSymmetric(Matrix m) {
+    public static boolean isSquare(Matrix m) {
         return m.getColNum() == m.getRowNum();
     }
 
     public static boolean isIdentity(Matrix m) {
-        if (isSymmetric(m)) {
+        if (isSquare(m)) {
             for (int i = 0; i < m.getRowNum(); i++) {
                 for (int j = 0; j < m.getColNum(); j++) {
                     if (i == j && m.getElement(i, j) != 1) {
@@ -149,21 +151,28 @@ public class Matrix {
     /* ********** BACA dan TULIS dengan INPUT/OUTPUT device ********** */
     /**
      * Return a matrix object after input is being read in the terminal. */
-    public static Matrix readMatrix() {
+    public static Matrix readMatrix(boolean isLastInput) {
         int row, col;
         Scanner matrixInput = new Scanner(System.in);
+
+        // read number of row and col
         System.out.print("Number of rows: ");
         row = matrixInput.nextInt();
         System.out.print("Number of columns: ");
         col = matrixInput.nextInt();
+
+        // matrix initialization and read element
         Matrix res = new Matrix(row, col);
+        System.out.println("Enter Matrix below :");
+        System.out.println("use whitespace to separate each element in a row and enter for each row");
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < col; j++) {
-                System.out.print("[" + i + "]" + "[" + j + "]: ");
                 res.setElement(i, j, matrixInput.nextDouble());
             }
         }
-        matrixInput.close();
+        if (isLastInput) {
+            matrixInput.close();
+        }
         return res;
     }
 
@@ -227,19 +236,20 @@ public class Matrix {
     /**
      * Multiply two matrices of which size is not yet confirmed,
      * will return a matrix of size m1.getRowNum() * m2.getColNum() if m1.getColNum() != m2.getRowNum(). */
-    public Matrix multiply(Matrix m1, Matrix m2) {
-        double temp;
+    public static Matrix multiply(Matrix m1, Matrix m2) {
         Matrix res = new Matrix(m1.getRowNum(), m2.getColNum());
         if (m1.getColNum() == m2.getRowNum()){
             for (int i = 0; i < m1.getRowNum(); i++) {
                 for (int j = 0; j < m2.getColNum(); j++) {
-                    temp = 0;
                     for (int k = 0; k < m1.getColNum(); k++) {
-                        temp += m1.getElement(i, k) * m2.getElement(k, i);
+                        double temp = 0;
+                        temp += m1.getElement(i, k) * m2.getElement(k, j);
+                        res.setElement(i, j, temp);
                     }
-                    res.setElement(i, j, temp);
                 }
             }
+        } else {
+            System.out.println("Operasi perkalian tidak dapat dilakukan");
         }
         return res;
     }
@@ -401,7 +411,7 @@ public class Matrix {
     public static double getDeterminantReduction(Matrix m) {
         int n;
         double d;
-        if (m.countElement() == 0) {
+        if (m.countElement() == 0) { 
             return 0;
         } else if (m.countElement() == 1) {
             return m.getElement(0, 0);
@@ -420,8 +430,8 @@ public class Matrix {
     /**
      * Returns the augmented matrix of m1 and m2 with m2 on the right of m1. Assumed that both matrices has the same
      * number of rows. */
-    public static Matrix augment(Matrix m1, Matrix m2) {
-        Matrix augmented = new Matrix(m1.getRowNum(), (m1.getColNum() + m2.getColNum()));
+    public static AugmentedMatrix augment(Matrix m1, Matrix m2) {
+        AugmentedMatrix augmented = new AugmentedMatrix(m1.getRowNum(), (m1.getColNum() + m2.getColNum()));
         for (int i = 0; i < m1.getRowNum(); i++) {
             for (int j = 0; j < m1.getColNum(); j++) {
                 augmented.setElement(i, j, m1.getElement(i, j));
@@ -435,6 +445,26 @@ public class Matrix {
         return augmented;
     }
 
+    /***
+     * Returns the A or B matrix with B is the last column of m and A is the rest */
+    public static Matrix disaugment(AugmentedMatrix m, boolean AnotB){
+        Matrix A = new Matrix(m.getRowNum(), m.getColNum()-1);
+        Matrix B = new Matrix(m.getRowNum(), 1);
+        for (int i = 0; i < m.getRowNum(); i++){
+            for (int j = 0; j < m.getColNum(); j++){
+                if (j < m.getColNum()-1){
+                    A.setElement(i, j, m.getElement(i, j));
+                } else {
+                    B.setElement(i, j, m.getElement(i, j));
+                }
+            }
+        }
+        if (AnotB){
+            return A;
+        } else {
+            return B;
+        }
+    }
     /**
      * Returns a cofactor matrix of the matrix that is passed. Assumed that matrix m is symmetric. */
     public static Matrix cofactor(Matrix m) {
@@ -472,15 +502,32 @@ public class Matrix {
     public static Matrix inverseAdjoin(Matrix m) {
         Matrix inverted;
         double detInverted = getCofactorDeterminant(m);
-        if (detInverted == 0) {
+        if (detInverted == 0 && !isSquare(m)) {
+            System.out.println("Matriks tidak memiliki Invers : mengembalikan matriks kembali");
             return m;
+        } else {
+            detInverted = 1 / detInverted;
+            inverted = cofactor(m);
+            inverted = transpose(inverted);
+            inverted = multiplyByConstant(inverted, detInverted);
+            return inverted;
         }
-        detInverted = 1 / detInverted;
-        inverted = cofactor(m);
-        inverted = transpose(inverted);
-        inverted = multiplyByConstant(inverted, detInverted);
-        return inverted;
     }
 
-    
+    /***
+     * Return matrix of solution Ax = B and print the solution to the screen. Assume number of column A = number of row B*/
+    public static Matrix setResultInvers(Matrix A, Matrix B) {
+        Matrix res;
+        res = multiply(inverseAdjoin(A), B);
+
+        // cek apakah matrix singular
+        if (getCofactorDeterminant(A) == 0 && !isSquare(A)){
+            System.out.println("Matriks A adalah matriks singular : tidak dapat menggunakan metode balikan!");
+        } else {
+            for (int i = 0; i < res.getRowNum(); i++) {
+                System.out.print("X" + (i+1) + " = " + res.getElement(i, 0) + "\n");
+            }
+        }
+        return res;
+    }
 }
