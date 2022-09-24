@@ -24,10 +24,8 @@ public class AugmentedMatrix extends Matrix {
     }
 
     public static String[] addParametric(String[] e1, String[] e2, int params) {
-        String[] result = new String[1+2*params];
-        for (int i = 0; i < 1 + 2 * params; i++) {
-            result[i] = e1[i];
-        }
+        String[] result;
+        result = e1.clone();
         result[0] = String.valueOf((Double.parseDouble(e1[0]) + Double.parseDouble(e2[0])));
         for (int i = 1; i < 1+(2*params); i+=2) {
             result[i] = String.valueOf((Double.parseDouble(e1[i]) + Double.parseDouble(e2[i])));
@@ -36,10 +34,8 @@ public class AugmentedMatrix extends Matrix {
     }
 
     public static String[] constParametric(String[] e, int params, double c) {
-        String[] result = new String[1+(2*params)];
-        for (int i = 0; i < 1 + 2 * params; i++) {
-            result[i] = e[i];
-        }
+        String[] result;
+        result = e.clone();
         result[0] = String.valueOf((Double.parseDouble(e[0]) * c));
         for (int i = 1; i < 1+(2*params); i+=2) {
             result[i] = String.valueOf((c * Double.parseDouble(e[i])));
@@ -135,13 +131,13 @@ public class AugmentedMatrix extends Matrix {
             if (params != 0) {
                 for (int i = 0; i < m.getColNum() - 1; i++) {
                     if (i != 0) {
-                        m.displayableSolution += "\n";
+                        m.displayableSolution = m.displayableSolution.concat(("\n"));
                     }
-                    m.displayableSolution += "X" + (i + 1) + " = ";
+                    m.displayableSolution = m.displayableSolution.concat(("X" + (i + 1) + " = "));
                     j = 0;
                     while (j < 2 * params + 1) {
                         if (j == 0 && Double.parseDouble(m.solution[i][j]) != 0) {
-                            m.displayableSolution += m.solution[i][j];
+                            m.displayableSolution = m.displayableSolution.concat(m.solution[i][j]);
                             allZero = true;
                             for (int k = 1; k < 2 * params + 1; k+=2) {
                                 if (Double.parseDouble(m.solution[i][k]) != 0) {
@@ -149,7 +145,7 @@ public class AugmentedMatrix extends Matrix {
                                 }
                             }
                             if (!allZero) {
-                                m.displayableSolution += " + ";
+                                m.displayableSolution = m.displayableSolution.concat((" + "));
                             }
                         } else if (Math.floorMod(j, 2) == 1) {
                             if (Double.parseDouble(m.solution[i][j]) == 0) {
@@ -160,13 +156,13 @@ public class AugmentedMatrix extends Matrix {
                                 continue;
                             } else if (Double.parseDouble(m.solution[i][j]) == -1) {
                                 m.displayableSolution = m.displayableSolution.substring(0, (m.displayableSolution.length() - 2));
-                                m.displayableSolution += "- ";
+                                m.displayableSolution = m.displayableSolution.concat("- ");
                                 j += 1;
                                 continue;
                             }
-                            m.displayableSolution += "(" + m.solution[i][j] + ")";
+                            m.displayableSolution = m.displayableSolution.concat("(" + m.solution[i][j] + ")");
                         } else if (j > 0){
-                            m.displayableSolution += m.solution[i][j];
+                            m.displayableSolution = m.displayableSolution.concat(m.solution[i][j]);
                             if (j != 2 * params) {
                                 allZero = true;
                                 for (int k = j + 1; k < 2 * params + 1; k+=2) {
@@ -175,7 +171,7 @@ public class AugmentedMatrix extends Matrix {
                                     }
                                 }
                                 if (!allZero) {
-                                    m.displayableSolution += " + ";
+                                    m.displayableSolution = m.displayableSolution.concat(" +");
                                 }
                             }
                         }
@@ -185,9 +181,9 @@ public class AugmentedMatrix extends Matrix {
             } else {
                 for (int i = 0; i < m.getColNum() - 1; i++) {
                     if (i != 0) {
-                        m.displayableSolution += "\n";
+                        m.displayableSolution = m.displayableSolution.concat("\n");
                     }
-                    m.displayableSolution += "X" + (i + 1) + " = " + m.solution[i][0];
+                    m.displayableSolution = m.displayableSolution.concat("X" + (i + 1) + " = " + m.solution[i][0]);
                 }
             }
         }

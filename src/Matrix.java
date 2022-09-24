@@ -168,7 +168,7 @@ public class Matrix {
     }
 
     /**
-     * print element of matrix which each columns and row separated by whitespace */
+     * print element of matrix which each column and row separated by whitespace */
     public static void displayMatrix(Matrix m) {
         for (int i = 0; i < m.getRowNum(); i++) {
             for (int j = 0; j < m.getColNum(); j++) {
@@ -420,8 +420,8 @@ public class Matrix {
     /**
      * Returns the augmented matrix of m1 and m2 with m2 on the right of m1. Assumed that both matrices has the same
      * number of rows. */
-    public static Matrix augment(Matrix m1, Matrix m2) {
-        Matrix augmented = new Matrix(m1.getRowNum(), (m1.getColNum() + m2.getColNum()));
+    public static AugmentedMatrix augment(Matrix m1, Matrix m2) {
+        AugmentedMatrix augmented = new AugmentedMatrix(m1.getRowNum(), (m1.getColNum() + m2.getColNum()));
         for (int i = 0; i < m1.getRowNum(); i++) {
             for (int j = 0; j < m1.getColNum(); j++) {
                 augmented.setElement(i, j, m1.getElement(i, j));
