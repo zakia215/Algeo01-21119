@@ -25,14 +25,15 @@ public class Main {
         //     }
         // }
         // System.out.println(testResult.getDisplayableSolution());
-        Matrix A = Matrix.readMatrix(false);
-        Matrix B = Matrix.readMatrix(true);
-        AugmentedMatrix C = Matrix.augment(A, B);
-        AugmentedMatrix.displayMatrix(C);
+        Matrix A = Matrix.readMatrix(true);
+        // Matrix B = Matrix.readMatrix(true);
+        // AugmentedMatrix C = Matrix.augment(A, B);
+        // AugmentedMatrix.displayMatrix(C);
         // Matrix.displayMatrix(res);
         // System.out.println(A.getElement(0, 0));
-        if (AugmentedMatrix.isThereAllZeroButLastOne(C)) {
-            System.out.println("anjay");
-        }
+        // if (AugmentedMatrix.isThereAllZeroButLastOne(C)) {
+        //     System.out.println("anjay");
+        // }
+        Matrix.displayMatrix(Matrix.inverseGaussJordan(A));
     }
 }
