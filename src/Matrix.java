@@ -178,7 +178,7 @@ public class Matrix {
     }
 
     /**
-     * print element of matrix which each columns and row separated by whitespace */
+     * print element of matrix which each column and row separated by whitespace */
     public static void displayMatrix(Matrix m) {
         for (int i = 0; i < m.getRowNum(); i++) {
             for (int j = 0; j < m.getColNum(); j++) {

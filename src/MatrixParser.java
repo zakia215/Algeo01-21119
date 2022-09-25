@@ -88,6 +88,58 @@ public class MatrixParser {
                 }
             }
         }
+        doubleReader.close();
         setParsedMatrix(m);
+    }
+
+    public AugmentedMatrix getInterpolationMatrix() {
+        int row = this.readLines(), col = this.readLines() + 1;
+        double toInsert;
+        AugmentedMatrix inter = new AugmentedMatrix(row, col);
+
+        Scanner doubleReader = new Scanner(getLines());
+        for (int i = 0; i < row; i++) {
+            if (doubleReader.hasNextDouble()) {
+                toInsert = doubleReader.nextDouble();
+                for (int j = 0; j < col - 1; j++) {
+                    inter.setElement(i, j, Math.pow(toInsert, j));
+                }
+                toInsert = doubleReader.nextDouble();
+                inter.setElement(i, (col-1), toInsert);
+            }
+        }
+        doubleReader.close();
+        this.parsedMatrix = inter;
+
+        return inter;
+    }
+
+    public AugmentedMatrix getRegressionMatrix() {
+        int row = getCol(getLines()), col = row + 1, n = readLines();
+        double toInsert, curSum, a, b;
+        AugmentedMatrix rm = new AugmentedMatrix(row, col);
+
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                curSum = 0;
+                for (int k = 0; k < n; k++) {
+                    if (i == 0) {
+                        a = 1;
+                    } else {
+                        a = getParsedMatrix().getElement(k, (i - 1));
+                    }
+                    if (j == 0) {
+                        b = 1;
+                    } else {
+                        b = getParsedMatrix().getElement(k, (j - 1));
+                    }
+                    curSum += (a * b);
+                }
+                rm.setElement(i, j, curSum);
+            }
+        }
+
+        setParsedMatrix(rm);
+        return rm;
     }
 }
