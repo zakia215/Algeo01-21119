@@ -1,3 +1,5 @@
+import java.util.*;
+
 public class Regression {
 
     public static double[] getBeta(AugmentedMatrix am, AugmentedMatrix data) {
@@ -30,6 +32,30 @@ public class Regression {
         e = sum / regData.getRowNum();
 
         return e;
+    }
+
+    public static String setRegressionEquation(double[] betas) {
+        String equation = "y =", end, start, toInsert, value;
+        for (int i = 0; i < betas.length; i++) {
+            if (betas[i] != 0) {
+                end = " X" + String.valueOf((i));
+                value = String.valueOf(betas[i]);
+                start = " + ";
+                if (i == 0) {
+                    start = "";
+                    end = "";
+                } else if (i == betas.length - 1) {
+                    end = "";
+                }
+                if (betas[i] < 0) {
+                    start = " - ";
+                    value = String.valueOf((betas[i] * -1));
+                }
+                toInsert = start + value + end;
+                equation = equation.concat(toInsert);
+            }
+        }
+        return equation;
     }
 
 }
