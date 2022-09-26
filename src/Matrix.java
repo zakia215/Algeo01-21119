@@ -564,20 +564,44 @@ public class Matrix {
     }
 
     /***
-     * Return matrix of solution Ax = B and print the solution to the screen. Assume number of column A = number of row B*/
+     * Return matrix of solution Ax = B using Inverse method. Assume number of column A = number of row B*/
     public static Matrix setResultInvers(Matrix A, Matrix B) {
-        Matrix res;
-        res = multiply(inverseAdjoin(A), B);
-
-        // check is matrix singular ?
-        if (getCofactorDeterminant(A) == 0 && !isSquare(A)){
-            System.out.println("Matriks A adalah matriks singular : tidak dapat menggunakan metode balikan!");
+        Matrix res = new Matrix(A.getRowNum(), 1);
+        
+        if (B.getColNum() > 1) {
+            System.out.println("Matrix B tidak memenuhi (Ax = B) !");
         } else {
-            for (int i = 0; i < res.getRowNum(); i++) {
-                System.out.print("X" + (i+1) + " = " + res.getElement(i, 0) + "\n");
+            // check is matrix singular ?
+            if (getDeterminantReduction(A) == 0 || !isSquare(A)){
+                System.out.println("Matriks A adalah matriks singular : tidak dapat menggunakan metode balikan!");
+            } else {
+                res = multiply(inverseGaussJordan(A), B);
             }
         }
         return res;
     }
 
+    /***
+     * Return matrix of solution Ax = B using cramer method */
+    public static Matrix setResultCramer(Matrix A, Matrix B) {
+        Matrix res = new Matrix(A.getColNum(), 1);
+        double detA = getDeterminantReduction(A);
+
+        if (B.getColNum() > 1) {
+            System.out.println("Matrix B tidak memenuhi (Ax = B) !");
+        } else {
+            if (detA == 0 || A.getRowNum() != B.getRowNum()) {
+                System.out.println("Persamaan tidak dapat diselesaikan dengan metode cramer!");
+            } else {
+                for (int j = 0; j < A.getColNum(); j++) {
+                    Matrix temp = copyMatrix(A);
+                    for (int i = 0; i < A.getRowNum(); i++) {
+                        temp.setElement(i, j, B.getElement(i, 0));
+                    }
+                    res.setElement(j, 0, getDeterminantReduction(temp)/detA); ;
+                }
+            }
+        }
+        return res;
+    }
 }
