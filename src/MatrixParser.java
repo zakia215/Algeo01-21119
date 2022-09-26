@@ -142,4 +142,40 @@ public class MatrixParser {
         setParsedMatrix(rm);
         return rm;
     }
+
+    public Matrix getBicubicY(boolean file) {
+        Matrix bm = new Matrix(16, 1);
+        if (file) {
+            int curIdx = 0;
+            for (int i = 0; i < 4; i++) {
+                for (int j = 0; j < 4; j++) {
+                    bm.setElement(curIdx, 0, getParsedMatrix().getElement(i, j));
+                    curIdx += 1;
+                }
+            }
+        } else {
+            Scanner bicubicScanner = new Scanner(System.in);
+
+            for (int i = 0; i < 16; i++) {
+                bm.setElement(i, 0, bicubicScanner.nextDouble());
+            }
+            bicubicScanner.close();
+        }
+
+        return bm;
+    }
+
+    public double[] getPointToInterpolate() {
+        double[] result = new double[2];
+        Scanner valueScanner = new Scanner(System.in);
+
+        for (int i = 0; i < 16; i++) {
+            valueScanner.nextDouble();
+        }
+        for (int i = 0; i < 2; i++) {
+            result[i] = valueScanner.nextDouble();
+        }
+
+        return result;
+    }
 }

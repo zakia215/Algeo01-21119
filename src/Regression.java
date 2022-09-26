@@ -1,3 +1,5 @@
+import java.util.*;
+
 public class Regression {
 
     public static double[] getBeta(AugmentedMatrix am, AugmentedMatrix data) {
@@ -32,7 +34,7 @@ public class Regression {
         return e;
     }
 
-    public static String getRegressionEquation(double[] betas) {
+    public static String setRegressionEquation(double[] betas) {
         String equation = "y =", end, start, toInsert, value;
         for (int i = 0; i < betas.length; i++) {
             if (betas[i] != 0) {

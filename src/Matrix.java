@@ -152,7 +152,7 @@ public class Matrix {
     /* ********** BASIC FUNCTION OF MATRIX ********** */
     /**
      * Return a matrix object after input is being read in the terminal. */
-    public static Matrix readMatrix(boolean isLastInput) {
+    public static AugmentedMatrix readMatrix(boolean isLastInput) {
         int row, col;
         Scanner matrixInput = new Scanner(System.in);
 
@@ -163,7 +163,7 @@ public class Matrix {
         col = matrixInput.nextInt();
 
         // matrix initialization and read element
-        Matrix res = new Matrix(row, col);
+        AugmentedMatrix res = new AugmentedMatrix(row, col);
         System.out.println("Enter Matrix below :");
         System.out.println("use whitespace to separate each element in a row and enter for each row");
         for (int i = 0; i < row; i++) {
@@ -240,10 +240,10 @@ public class Matrix {
     public static Matrix multiply(Matrix m1, Matrix m2) {
         Matrix res = new Matrix(m1.getRowNum(), m2.getColNum());
         if (m1.getColNum() == m2.getRowNum()){
-            for (int i = 0; i < m1.getRowNum(); i++) {
-                for (int j = 0; j < m2.getColNum(); j++) {
+            for (int j = 0; j < m2.getColNum(); j++) {
+                for (int i = 0; i < m1.getRowNum(); i++) {
+                    double temp = 0;
                     for (int k = 0; k < m1.getColNum(); k++) {
-                        double temp = 0;
                         temp += m1.getElement(i, k) * m2.getElement(k, j);
                         res.setElement(i, j, temp);
                     }
@@ -430,10 +430,11 @@ public class Matrix {
         } else if (m.countElement() == 1) {
             return m.getElement(0, 0);
         } else {
-            n = toUpperTriangle(m);
-            d = m.getElement(0, 0);
-            for (int i = 1; i < m.getRowNum(); i++) {
-                d *= m.getElement(i, i);
+            Matrix y = copyMatrix(m);
+            n = toUpperTriangle(y);
+            d = y.getElement(0, 0);
+            for (int i = 1; i < y.getRowNum(); i++) {
+                d *= y.getElement(i, i);
             }
             d *= Math.pow(-1, n);
         }
@@ -515,7 +516,7 @@ public class Matrix {
      * Returns the inverse of m using adjoin cofactor method. If determinant is zero will return the passed matrix itself. */
     public static Matrix inverseAdjoin(Matrix m) {
         Matrix inverted;
-        double detInverted = getCofactorDeterminant(m);
+        double detInverted = getDeterminantReduction(m);
         if (detInverted == 0 && !isSquare(m)) {
             System.out.println("Matriks tidak memiliki Invers : mengembalikan matriks kembali ");
             return m;
@@ -531,8 +532,7 @@ public class Matrix {
     /***
      * Returns the inverse of m using Gauss-Jordan elimination method. If determinant is zero will return the passed matrix itself.*/
     public static Matrix inverseGaussJordan(Matrix m) {
-        System.out.println(getCofactorDeterminant(m));
-        if (getCofactorDeterminant(m) == 0 || !isSquare(m)){
+        if (getDeterminantReduction(m) == 0 || !isSquare(m)){
             System.out.println("Matriks tidak memiliki Invers : mengembalikan matriks kembali !");
             return m;
         } else {
@@ -548,11 +548,11 @@ public class Matrix {
                 }
             }
 
-            // merge m and identity with identity in the right side and turn the matrix to reducted echelon
+            // merge m and identity with identity on the right side and turn the matrix to reduced echelon
             AugmentedMatrix temp = augment(m, Identity);
             toEchelon(temp, true);
 
-            // copy the left side to the inversed matrix
+            // copy the left side to the inverted matrix
             Matrix Inversed = new Matrix(m.getRowNum(), m.getColNum());
             for (int i = 0; i < m.getRowNum(); i++) {
                 for (int j = 0; j < m.getColNum(); j++) {
@@ -565,16 +565,18 @@ public class Matrix {
 
     /***
      * Return matrix of solution Ax = B and print the solution to the screen. Assume number of column A = number of row B*/
-    public static Matrix setResultInvers(Matrix A, Matrix B) {
-        Matrix res;
-        res = multiply(inverseAdjoin(A), B);
+    public static Matrix setResultInvers(Matrix A, Matrix B, boolean output) {
+        Matrix res = new Matrix(A.getRowNum(), 1);
 
         // check is matrix singular ?
-        if (getCofactorDeterminant(A) == 0 && !isSquare(A)){
+        if (getDeterminantReduction(A) == 0 || !isSquare(A)){
             System.out.println("Matriks A adalah matriks singular : tidak dapat menggunakan metode balikan!");
         } else {
-            for (int i = 0; i < res.getRowNum(); i++) {
-                System.out.print("X" + (i+1) + " = " + res.getElement(i, 0) + "\n");
+            res = multiply(inverseGaussJordan(A), B);
+            if (output) {
+                for (int i = 0; i < res.getRowNum(); i++) {
+                    System.out.print("X" + (i+1) + " = " + res.getElement(i, 0) + "\n");
+                }
             }
         }
         return res;
