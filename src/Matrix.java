@@ -148,7 +148,8 @@ public class Matrix {
     }
 
     
-    /* ********** BACA dan TULIS dengan INPUT/OUTPUT device ********** */
+
+    /* ********** BASIC FUNCTION OF MATRIX ********** */
     /**
      * Return a matrix object after input is being read in the terminal. */
     public static Matrix readMatrix(boolean isLastInput) {
@@ -278,6 +279,19 @@ public class Matrix {
         return res;
     }
 
+    /**
+     * Returns a copy of passed matrix. */
+    public static Matrix copyMatrix(Matrix m) {
+        Matrix copy = new Matrix(m.getRowNum(), m.getColNum());
+        for (int i = 0; i < m.getRowNum(); i++) {
+            for (int j = 0;j < m.getColNum(); j++) {
+                copy.setElement(i, j, m.getElement(i, j));
+            }
+        }
+        return copy;
+    }
+
+    /* ********** ADVANCE FUNCTION OF MATRIX ********** */
     /**
      * return an echelon or a reduced echelon form of the passed matrix depending on the value of the reduced parameter */
     public static void toEchelon(Matrix m, boolean reduced) {
@@ -498,12 +512,12 @@ public class Matrix {
     }
 
     /**
-     * Returns the inverse of m. If determinant is zero will return the passed matrix itself. */
+     * Returns the inverse of m using adjoin cofactor method. If determinant is zero will return the passed matrix itself. */
     public static Matrix inverseAdjoin(Matrix m) {
         Matrix inverted;
         double detInverted = getCofactorDeterminant(m);
         if (detInverted == 0 && !isSquare(m)) {
-            System.out.println("Matriks tidak memiliki Invers : mengembalikan matriks kembali");
+            System.out.println("Matriks tidak memiliki Invers : mengembalikan matriks kembali ");
             return m;
         } else {
             detInverted = 1 / detInverted;
@@ -513,6 +527,41 @@ public class Matrix {
             return inverted;
         }
     }
+    
+    /***
+     * Returns the inverse of m using Gauss-Jordan elimination method. If determinant is zero will return the passed matrix itself.*/
+    public static Matrix inverseGaussJordan(Matrix m) {
+        System.out.println(getCofactorDeterminant(m));
+        if (getCofactorDeterminant(m) == 0 || !isSquare(m)){
+            System.out.println("Matriks tidak memiliki Invers : mengembalikan matriks kembali !");
+            return m;
+        } else {
+            // make Identity matrix
+            Matrix Identity = new Matrix(m.getRowNum(), m.getColNum());
+            for (int i = 0; i < Identity.getRowNum(); i++) {
+                for (int j = 0; j < Identity.getColNum(); j++) {
+                    if (i == j){
+                        Identity.setElement(i, j, 1);
+                    } else {
+                        Identity.setElement(i, j, 0);
+                    }
+                }
+            }
+
+            // merge m and identity with identity in the right side and turn the matrix to reducted echelon
+            AugmentedMatrix temp = augment(m, Identity);
+            toEchelon(temp, true);
+
+            // copy the left side to the inversed matrix
+            Matrix Inversed = new Matrix(m.getRowNum(), m.getColNum());
+            for (int i = 0; i < m.getRowNum(); i++) {
+                for (int j = 0; j < m.getColNum(); j++) {
+                    Inversed.setElement(i, j, temp.getElement(i, j+m.getColNum()));
+                }
+            }
+            return Inversed;
+        }
+    }
 
     /***
      * Return matrix of solution Ax = B and print the solution to the screen. Assume number of column A = number of row B*/
@@ -520,7 +569,7 @@ public class Matrix {
         Matrix res;
         res = multiply(inverseAdjoin(A), B);
 
-        // cek apakah matrix singular
+        // check is matrix singular ?
         if (getCofactorDeterminant(A) == 0 && !isSquare(A)){
             System.out.println("Matriks A adalah matriks singular : tidak dapat menggunakan metode balikan!");
         } else {
@@ -530,4 +579,5 @@ public class Matrix {
         }
         return res;
     }
+
 }
