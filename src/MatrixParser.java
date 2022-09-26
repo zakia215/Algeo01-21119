@@ -116,7 +116,7 @@ public class MatrixParser {
 
     public AugmentedMatrix getRegressionMatrix() {
         int row = getCol(getLines()), col = row + 1, n = readLines();
-        double toInsert, curSum, a, b;
+        double curSum, a, b;
         AugmentedMatrix rm = new AugmentedMatrix(row, col);
 
         for (int i = 0; i < row; i++) {

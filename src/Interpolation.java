@@ -16,7 +16,7 @@ public class Interpolation {
             additional = "";
             if (result[i] != 0) {
                 if (result[i] < 0) {
-                    ending = "^" + String.valueOf(i);
+                    ending = "^" + i;
                     additional = " -";
                     if (i == 1) {
                         ending = "";
@@ -24,7 +24,7 @@ public class Interpolation {
                     toConcat = additional + " " + (result[i] * -1) + " x" + ending;
                     equation = equation.concat(toConcat);
                 } else {
-                    ending = "^" + String.valueOf(i);
+                    ending = "^" + i;
                     if (i == 1) {
                         ending = "";
                     }
