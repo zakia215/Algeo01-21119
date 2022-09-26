@@ -142,7 +142,6 @@ public class AugmentedMatrix extends Matrix {
     public static void getSolutionString(AugmentedMatrix m, int params) {
         int j;
         boolean allZero;
-        String begin, start, value, end, toInsert;
 
         if (hasNoSolution(m)) {
             m.displayableSolution = "Tidak ada solusi";

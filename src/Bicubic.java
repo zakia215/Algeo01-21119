@@ -33,7 +33,7 @@ public class Bicubic {
 
     public static double[] getCoefficient(Matrix X, Matrix Y) {
         double[] aCoefficient = new double[16];
-        Matrix aInMatrix = Matrix.setResultInvers(X, Y, false);
+        Matrix aInMatrix = Matrix.setResultInvers(X, Y);
 
         for (int i = 0; i < 16; i++) {
             aCoefficient[i] = aInMatrix.getElement(i, 0);

@@ -175,7 +175,7 @@ public class MatrixParser {
         for (int i = 0; i < 2; i++) {
             result[i] = valueScanner.nextDouble();
         }
-
+        valueScanner.close();
         return result;
     }
 }
