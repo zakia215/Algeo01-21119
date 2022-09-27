@@ -1,15 +1,14 @@
 public class Bicubic {
 
+    /***
+     * Returns X matrix with function f(x,y) = (x^i)(y^j) and x,y [-1, 0, 1, 2]
+     * @return
+     */
     public static Matrix getBicubicX() {
         int curX = -1, curY = -1, curRow = 0, curCol = 0;
         Matrix bm = new Matrix(16, 16);
         double a, b, toInsert;
 
-        for (int i = -1; i <= 2; i++) {
-            for (int j = -1; j <= 2; j++) {
-                
-            }
-        }
         while (curY <= 2) {
             curX = -1;
             while (curX <= 2) {
