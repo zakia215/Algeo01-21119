@@ -5,6 +5,11 @@ public class Bicubic {
         Matrix bm = new Matrix(16, 16);
         double a, b, toInsert;
 
+        for (int i = -1; i <= 2; i++) {
+            for (int j = -1; j <= 2; j++) {
+                
+            }
+        }
         while (curY <= 2) {
             curX = -1;
             while (curX <= 2) {
