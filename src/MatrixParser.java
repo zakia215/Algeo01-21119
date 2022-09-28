@@ -6,10 +6,10 @@ public class MatrixParser {
     private String lines;
     private AugmentedMatrix parsedMatrix;
 
-    public MatrixParser(String filePath) {
+    public MatrixParser(String filePath, boolean bicubic) {
         this.filePath = filePath;
-        readLines();
-        parseMatrix();
+        readLines(bicubic);
+        parseMatrix(bicubic);
     }
 
     public void setFilePath(String filePath) {
@@ -40,7 +40,7 @@ public class MatrixParser {
      * readLines() passes no parameter and return the number of lines that are in the txt file. Assumed the filePath 
      * field is not empty. Also sets the lines field with all the lines in the text file seperated by a new line.
      */
-    public int readLines() {
+    public int readLines(boolean bicubic) {
         int i = 0;
         try {
             File inputFile = new File(this.getFilePath());
@@ -55,6 +55,9 @@ public class MatrixParser {
             System.out.println("An error occurred.");
             exception.printStackTrace();
         }
+        if (bicubic) {
+            i -= 1;
+        }
         return i;
     }
 
@@ -62,23 +65,26 @@ public class MatrixParser {
      * Returns the number of columns that are in the matrix that is read in the txt file. Assumed that we already set
      * the line field.
      */
-    public int getCol(String t) {
-        int i = 0;
+    public int getCol(String t, boolean bicubic) {
+        int i = 0, row = readLines(bicubic);
         Scanner doubleCounter = new Scanner(t);
         while (doubleCounter.hasNextDouble()) {
             doubleCounter.nextDouble();
             i += 1;
         }
         doubleCounter.close();
-        i /= this.readLines();
+        if (bicubic) {
+            i -= 2;
+        }
+        i /= row;
         return i;
     }
 
     /**
      * Returns the matrix in the lines field and turns it into a matrix object.
      */
-    public void parseMatrix() {
-        int row = this.readLines(), col = getCol(getLines());
+    public void parseMatrix(boolean bicubic) {
+        int row = readLines(bicubic), col = getCol(getLines(), bicubic);
         AugmentedMatrix m = new AugmentedMatrix(row, col);
         Scanner doubleReader = new Scanner(getLines());
         for (int i = 0; i < row; i++) {
@@ -93,7 +99,7 @@ public class MatrixParser {
     }
 
     public AugmentedMatrix getInterpolationMatrix() {
-        int row = this.readLines(), col = this.readLines() + 1;
+        int row = this.readLines(false), col = this.readLines(false) + 1;
         double toInsert;
         AugmentedMatrix inter = new AugmentedMatrix(row, col);
 
@@ -115,7 +121,7 @@ public class MatrixParser {
     }
 
     public AugmentedMatrix getRegressionMatrix() {
-        int row = getCol(getLines()), col = row + 1, n = readLines();
+        int row = getCol(getLines(), false), col = row + 1, n = readLines(false);
         double curSum, a, b;
         AugmentedMatrix rm = new AugmentedMatrix(row, col);
 
@@ -149,7 +155,7 @@ public class MatrixParser {
             int curIdx = 0;
             for (int i = 0; i < 4; i++) {
                 for (int j = 0; j < 4; j++) {
-                    bm.setElement(curIdx, 0, getParsedMatrix().getElement(i, j));
+                    bm.setElement(curIdx, 0, getParsedMatrix().getElement(j, i));
                     curIdx += 1;
                 }
             }
@@ -167,11 +173,12 @@ public class MatrixParser {
 
     public double[] getPointToInterpolate() {
         double[] result = new double[2];
-        Scanner valueScanner = new Scanner(System.in);
+        Scanner valueScanner = new Scanner(getLines());
 
         for (int i = 0; i < 16; i++) {
             valueScanner.nextDouble();
         }
+
         for (int i = 0; i < 2; i++) {
             result[i] = valueScanner.nextDouble();
         }

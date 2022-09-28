@@ -1,3 +1,5 @@
+import java.util.*;
+
 public class Interpolation {
 
     public static double[] getEquation(AugmentedMatrix am) {
@@ -55,6 +57,58 @@ public class Interpolation {
         }
         y += result[0];
         return y;
+    }
+
+    public static void runInterpolation(boolean file, String filePath) {
+        Scanner valueScanner = new Scanner(System.in);
+        AugmentedMatrix im;
+        double[] resultCoefficient;
+        String equationLine;
+        double toPredict, predictedValue;
+
+        if (file) {
+            MatrixParser parsedMatrix = new MatrixParser(filePath, false);
+            im = parsedMatrix.getInterpolationMatrix();
+            resultCoefficient = getEquation(im);
+            equationLine = getEquationLine(resultCoefficient);
+
+        } else {
+            int n;
+            double toInsert;
+            Scanner imScanner = new Scanner(System.in);
+
+            System.out.print("Masukkan n: ");
+            n = imScanner.nextInt();
+            while (n <= 1) {
+                System.out.print("Nilai n harus lebih dari 1\nMasukkan n: ");
+                n = imScanner.nextInt();
+            }
+            im = new AugmentedMatrix(n, (n + 1));
+
+            int i = 0;
+            while (i < n) {
+                if (imScanner.hasNextDouble()) {
+                    toInsert = imScanner.nextDouble();
+                    for (int j = 0; j < n; j++) {
+                        im.setElement(i, j, Math.pow(toInsert, j));
+                    }
+                    toInsert = imScanner.nextDouble();
+                    im.setElement(i, n, toInsert);
+                }
+                i += 1;
+            }
+            resultCoefficient = getEquation(im);
+            equationLine = getEquationLine(resultCoefficient);
+            imScanner.close();
+        }
+
+        System.out.print("Masukkan nilai X yang ingin diprediksi nilainya: ");
+        toPredict = valueScanner.nextDouble();
+        predictedValue = predictValue(toPredict, resultCoefficient);
+
+        System.out.println("Persamaan yang dihasilkan: ");
+        System.out.println(equationLine);
+        System.out.println("Nilai yang diprediksi untuk " + toPredict + " adalah: " + predictedValue);
     }
 
 }

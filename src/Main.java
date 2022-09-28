@@ -1,12 +1,8 @@
 public class Main {
 
-
-
     public static void main(String[] args) {
-        System.out.println("ini main");
-        Matrix A = Matrix.readMatrix(false);
-        Matrix B = Matrix.readMatrix(true);
-        Matrix.displayMatrix(Matrix.setResultCramer(A, B));
+        String filePath = "D:\\ITB\\Semester 3\\Aljabar Liniear dan Geometri\\Algeo01-21119\\test\\input_4.txt";
+        Bicubic.runBicubic(false, "");
     }
    
 }

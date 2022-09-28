@@ -598,8 +598,7 @@ public class Matrix {
                     for (int i = 0; i < A.getRowNum(); i++) {
                         temp.setElement(i, j, B.getElement(i, 0));
                     }
-                    res.setElement(j, 0, getDeterminantReduction(temp)/detA); ;
-                }
+                    res.setElement(j, 0, getDeterminantReduction(temp)/detA);                }
             }
         }
         return res;
