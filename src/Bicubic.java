@@ -3,6 +3,10 @@ import java.util.regex.MatchResult;
 
 public class Bicubic {
 
+    /***
+     * Returns X matrix with function f(x,y) = (x^i)(y^j) and x,y [-1, 0, 1, 2]
+     * @return
+     */
     public static Matrix getBicubicX() {
         int curX = -1, curY = -1, curRow = 0, curCol = 0;
         Matrix bm = new Matrix(16, 16);
