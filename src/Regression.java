@@ -1,4 +1,4 @@
-
+import java.util.*;
 public class Regression {
 
     public static double[] getBeta(AugmentedMatrix am, AugmentedMatrix data) {
