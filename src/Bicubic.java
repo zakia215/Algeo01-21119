@@ -4,10 +4,9 @@ import java.util.regex.MatchResult;
 public class Bicubic {
 
     /***
-     * Returns X matrix with function f(x,y) = (x^i)(y^j) and x,y [-1, 0, 1, 2]
-     * @return
-     */
+     * Returns X matrix with function f(x,y) = (x^i)(y^j) and x,y [-1, 0, 1, 2] */
     public static Matrix getBicubicX() {
+
         int curX = -1, curY = -1, curRow = 0, curCol = 0;
         Matrix bm = new Matrix(16, 16);
         double a, b, toInsert;
@@ -38,9 +37,11 @@ public class Bicubic {
         return bm;
     }
 
+    /***
+     * Returns double array of coeffiecient of Equation : a(ij) */
     public static double[] getCoefficient(Matrix X, Matrix Y) {
         double[] aCoefficient = new double[16];
-        Matrix aInMatrix = Matrix.setResultInvers(X, Y);
+        Matrix aInMatrix = Matrix.setResultInvers(X, Y); // a X = Y
 
         for (int i = 0; i < 16; i++) {
             aCoefficient[i] = aInMatrix.getElement(i, 0);
@@ -49,6 +50,8 @@ public class Bicubic {
         return aCoefficient;
     }
     
+    /***
+     * */
     public static double predictBicubicValue(double x, double y, double[] aCoefficient) {
         double result = 0, a, b;
         int i, j = 0, k = 0;
