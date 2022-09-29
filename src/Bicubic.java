@@ -51,17 +51,15 @@ public class Bicubic {
     
     public static double predictBicubicValue(double x, double y, double[] aCoefficient) {
         double result = 0, a, b;
-        int i = 0, j = 0, k = 0;
+        int i, j = 0, k = 0;
 
         while (j <= 3) {
             i = 0;
             while (i <= 3) {
                 a = Math.pow(x, i);
                 b = Math.pow(y, j);
-                if (a != 0 && b != 0 && aCoefficient[k] != 0) {
-                    result += aCoefficient[k] * Math.pow(x, k) * Math.pow(y, k);
-                    k += 1;
-                }
+                result += (aCoefficient[k] * a * b);
+                k += 1;
                 i += 1;
             }
             j += 1;
@@ -77,9 +75,13 @@ public class Bicubic {
         int i = -1, j, curRow = 0;
 
         if (fromFile) {
-            MatrixParser bYMatrix = new MatrixParser(filePath, true);
+            MatrixParser bYMatrix = new MatrixParser(filePath, true, false);
             double[] toPredict = bYMatrix.getPointToInterpolate();
+            for (int k = 0; k < 2; k++) {
+                System.out.println(toPredict[k]);
+            }
             ym = bYMatrix.getBicubicY(true);
+            Matrix.displayMatrix(ym);
             coefficients = getCoefficient(xm, ym);
             predictedValue = predictBicubicValue(toPredict[0], toPredict[1], coefficients);
         } else {
@@ -91,13 +93,15 @@ public class Bicubic {
             while (i <= 2) {
                 j = -1;
                 while (j <= 2) {
-                    System.out.print("f(" + j + ", " + i + "): ");
+                    System.out.print("f(" + i + ", " + j + "): ");
                     ym.setElement(curRow, 0, bicubicValueScanner.nextDouble());
                     j += 1;
-                    curRow += 1;
+                    curRow = Math.floorMod((curRow + 4), 16);
                 }
+                curRow += 1;
                 i += 1;
             }
+
 
             System.out.println("Masukkan titik yang ingin diprediksi nilainya: ");
             System.out.print("x: ");

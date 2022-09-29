@@ -177,6 +177,33 @@ public class Matrix {
         return res;
     }
 
+    public static AugmentedMatrix readSPL() {
+        int row, col;
+        Scanner matrixInput = new Scanner(System.in);
+
+        // read number of row and col
+        System.out.print("Masukkan m: ");
+        row = matrixInput.nextInt();
+        System.out.print("Masukkan n: ");
+        col = matrixInput.nextInt();
+
+        // matrix initialization and read element
+        AugmentedMatrix res;
+        Matrix a = new Matrix(row, col - 1), b = new Matrix(row, 1);
+        System.out.println("Masukkan Matriks A:");
+        System.out.println("Gunakan whitespace untuk memisahkan setiap elemen dan gunakan enter untuk memisahkan setiap baris.");
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col - 1; j++) {
+                a.setElement(i, j, matrixInput.nextDouble());
+            }
+        }
+        for (int i = 0; i < row; i++) {
+            b.setElement(i, 0, matrixInput.nextDouble());
+        }
+        res = augment(a, b);
+        return res;
+    }
+
     /**
      * print element of matrix which each column and row separated by whitespace */
     public static void displayMatrix(Matrix m) {
@@ -584,9 +611,15 @@ public class Matrix {
         } else {
             // check is matrix singular ?
             if (getDeterminantReduction(A) == 0 || !isSquare(A)){
-                System.out.println("Matriks A adalah matriks singular : tidak dapat menggunakan metode balikan!");
+                System.out.println("Matriks A adalah matriks singular: tidak dapat menggunakan metode balikan!");
             } else {
                 res = multiply(inverseGaussJordan(A), B);
+                for (int i = 0; i < A.getRowNum(); i++) {
+                    if (i != 0) {
+                        System.out.println();
+                    }
+                    System.out.println("X" + (i + 1) + " = " + res.getElement(i, 0));
+                }
             }
         }
         return res;
@@ -609,7 +642,14 @@ public class Matrix {
                     for (int i = 0; i < A.getRowNum(); i++) {
                         temp.setElement(i, j, B.getElement(i, 0));
                     }
-                    res.setElement(j, 0, getDeterminantReduction(temp)/detA);                }
+                    res.setElement(j, 0, getDeterminantReduction(temp)/detA);
+                }
+                for (int i = 0; i < A.getColNum(); i++) {
+                    if (i != 0) {
+                        System.out.println();
+                    }
+                    System.out.println("X" + (i + 1) + " = " + res.getElement(i, 0));
+                }
             }
         }
         return res;
