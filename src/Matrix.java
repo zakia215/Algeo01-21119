@@ -152,15 +152,14 @@ public class Matrix {
     /* ********** BASIC FUNCTION OF MATRIX ********** */
     /**
      * Return a matrix object after input is being read in the terminal. */
-    public static AugmentedMatrix readMatrix(boolean isLastInput) {
+    public static AugmentedMatrix readMatrix(Scanner globalScanner) {
         int row, col;
-        Scanner matrixInput = new Scanner(System.in);
 
         // read number of row and col
         System.out.print("Number of rows: ");
-        row = matrixInput.nextInt();
+        row = globalScanner.nextInt();
         System.out.print("Number of columns: ");
-        col = matrixInput.nextInt();
+        col = globalScanner.nextInt();
 
         // matrix initialization and read element
         AugmentedMatrix res = new AugmentedMatrix(row, col);
@@ -168,24 +167,22 @@ public class Matrix {
         System.out.println("use whitespace to separate each element in a row and enter for each row");
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < col; j++) {
-                res.setElement(i, j, matrixInput.nextDouble());
+                res.setElement(i, j, globalScanner.nextDouble());
             }
         }
-        if (isLastInput) {
-            matrixInput.close();
-        }
+        globalScanner.nextLine();
         return res;
     }
 
-    public static AugmentedMatrix readSPL() {
+    public static AugmentedMatrix readSPL(Scanner globalScanner) {
         int row, col;
-        Scanner matrixInput = new Scanner(System.in);
 
         // read number of row and col
         System.out.print("Masukkan m: ");
-        row = matrixInput.nextInt();
+        row = globalScanner.nextInt();
+        globalScanner.nextLine();
         System.out.print("Masukkan n: ");
-        col = matrixInput.nextInt();
+        col = globalScanner.nextInt();
 
         // matrix initialization and read element
         AugmentedMatrix res;
@@ -194,12 +191,13 @@ public class Matrix {
         System.out.println("Gunakan whitespace untuk memisahkan setiap elemen dan gunakan enter untuk memisahkan setiap baris.");
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < col - 1; j++) {
-                a.setElement(i, j, matrixInput.nextDouble());
+                a.setElement(i, j, globalScanner.nextDouble());
             }
         }
         for (int i = 0; i < row; i++) {
-            b.setElement(i, 0, matrixInput.nextDouble());
+            b.setElement(i, 0, globalScanner.nextDouble());
         }
+        globalScanner.nextLine();
         res = augment(a, b);
         return res;
     }
@@ -387,10 +385,17 @@ public class Matrix {
     /**
      * Returns a determinant of a matrix m, if the amount of element is zero it will return 0, if the element is 1 then
      * it will return that element. Otherwise, it will return the determinant using cofactor recursion. */
-    public static double getCofactorDeterminant(Matrix m) {
+    public static double getCofactorDeterminant(Matrix m, boolean output) {
         int curRow, curCol, pivot;
         double d;
         Matrix c;
+        if (!isSquare(m)) {
+            m.setDeterminant(Double.NaN);
+            if (output) {
+                System.out.println("Matriks bukan merupakan matriks persegi, determinan matriks tidak dapat dicari menggunakan metode kofaktor.");
+            }
+            return Double.NaN;
+        }
         if (m.countElement() == 0) {
             return 0;
         } else if (m.countElement() == 1) {
@@ -415,12 +420,15 @@ public class Matrix {
                     curRow += 1;
                 }
                 if (Math.floorMod(j, 2) == 1) {
-                    d = d - (m.getElement(pivot, j) * getCofactorDeterminant(c));
+                    d = d - (m.getElement(pivot, j) * getCofactorDeterminant(c, false));
                 } else {
-                    d = d + (m.getElement(pivot, j) * getCofactorDeterminant(c));
+                    d = d + (m.getElement(pivot, j) * getCofactorDeterminant(c, false));
                 }
             }
             m.setDeterminant(d);
+            if (output) {
+                System.out.println("Determinan Matriks: " + d);
+            }
             return d;
         }
     }
@@ -472,7 +480,11 @@ public class Matrix {
             n = toUpperTriangle(y);
             d = y.getElement(0, 0);
             for (int i = 1; i < y.getRowNum(); i++) {
-                d *= y.getElement(i, i);
+                if (y.getElement(i, i) != 0) {
+                    d *= y.getElement(i, i);
+                } else {
+                    d = 0;
+                }
             }
             d *= Math.pow(-1, n);
         }
@@ -508,7 +520,7 @@ public class Matrix {
                 if (j < m.getColNum()-1){
                     A.setElement(i, j, m.getElement(i, j));
                 } else {
-                    B.setElement(i, j, m.getElement(i, j));
+                    B.setElement(i, 0, m.getElement(i, j));
                 }
             }
         }
@@ -540,7 +552,7 @@ public class Matrix {
                         curRow += 1;
                     }
                 }
-                subMatrixDet = getCofactorDeterminant(subMatrix);
+                subMatrixDet = getCofactorDeterminant(subMatrix, false);
                 if (Math.floorMod((i + j), 2) == 1) {
                     subMatrixDet *= -1;
                 }
@@ -603,22 +615,25 @@ public class Matrix {
 
     /***
      * Return matrix of solution Ax = B using Inverse method. Assume number of column A = number of row B*/
-    public static Matrix setResultInvers(Matrix A, Matrix B) {
+    public static Matrix setResultInvers(Matrix A, Matrix B, boolean displayOutput) {
         Matrix res = new Matrix(A.getRowNum(), 1);
         
         if (B.getColNum() > 1) {
-            System.out.println("Matrix B tidak memenuhi (Ax = B) !");
+            if (displayOutput) {
+                System.out.println("Matrix B tidak memenuhi (Ax = B) !");
+            }
         } else {
             // check is matrix singular ?
             if (getDeterminantReduction(A) == 0 || !isSquare(A)){
-                System.out.println("Matriks A adalah matriks singular: tidak dapat menggunakan metode balikan!");
+                if (displayOutput) {
+                    System.out.println("Matriks A adalah matriks singular: tidak dapat menggunakan metode balikan!");
+                }
             } else {
                 res = multiply(inverseGaussJordan(A), B);
-                for (int i = 0; i < A.getRowNum(); i++) {
-                    if (i != 0) {
-                        System.out.println();
+                if (displayOutput) {
+                    for (int i = 0; i < A.getRowNum(); i++) {
+                        System.out.println("X" + (i + 1) + " = " + res.getElement(i, 0));
                     }
-                    System.out.println("X" + (i + 1) + " = " + res.getElement(i, 0));
                 }
             }
         }
@@ -645,9 +660,6 @@ public class Matrix {
                     res.setElement(j, 0, getDeterminantReduction(temp)/detA);
                 }
                 for (int i = 0; i < A.getColNum(); i++) {
-                    if (i != 0) {
-                        System.out.println();
-                    }
                     System.out.println("X" + (i + 1) + " = " + res.getElement(i, 0));
                 }
             }
