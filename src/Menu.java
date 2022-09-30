@@ -228,7 +228,6 @@ public class Menu {
         Matrix toInverse, inverted;
         if (!fromFile) {
             toInverse = Matrix.readMatrix(globalScanner);
-
         } else {
             MatrixParser willInverse = new MatrixParser(tempFilePath, false, false);
             toInverse = willInverse.getParsedMatrix();
