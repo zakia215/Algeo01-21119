@@ -91,7 +91,8 @@ public class Menu {
         "4. Interpolasi Linier",
         "5. Interpolasi Bicubic",
         "6. Regresi Linier Berganda",
-        "7. Keluar",
+        "7. Memperbesar Gambar",
+        "8. Keluar",
         "Pilihan: "
         );
         boolean notDone = true;
@@ -106,7 +107,8 @@ public class Menu {
                 case 4 -> interpolationProcedure(choice);
                 case 5 -> bicubicProcedure(choice);
                 case 6 -> regressionProcedure(choice);
-                case 7 -> {
+                case 7 -> scalingImageProcedure(choice);
+                case 8 -> {
                     System.out.println("Program selesai");
                     notDone = false;
                 }
@@ -140,7 +142,7 @@ public class Menu {
             globalScanner.nextLine();
         }
 
-        String filePath = "", tempFilePath = "", fileName;
+        String filePath = "", tempFilePath = "";
         boolean fromFile = (choiceInput == 1);
         if (choiceInput == 1) {
             filePath = System.getProperty("user.dir") + "\\test\\";
@@ -212,16 +214,15 @@ public class Menu {
             fileName = globalScanner.nextLine();
             tempFilePath = filePath + fileName;
             File testFile = new File(tempFilePath);
-            if (!testFile.exists()) {
-                boolean exist = false;
-                while (!exist) {
-                    System.out.println("File yang anda masukkan tidak ada");
-                    System.out.print("Masukkan nama file yang valid: ");
-                    fileName = globalScanner.nextLine();
-                    tempFilePath = filePath + fileName;
-                    File fileToInput = new File(tempFilePath);
-                    exist = fileToInput.exists();
-                }
+
+            boolean exist = testFile.exists();
+            while (!exist) {
+                System.out.println("File yang anda masukkan tidak ada");
+                System.out.print("Masukkan nama file yang valid: ");
+                fileName = globalScanner.nextLine();
+                tempFilePath = filePath + fileName;
+                File fileToInput = new File(tempFilePath);
+                exist = fileToInput.exists();
             }
         }
 
@@ -265,16 +266,15 @@ public class Menu {
             fileName = globalScanner.nextLine();
             tempFilePath = filePath + fileName;
             File testFile = new File(tempFilePath);
-            if (!testFile.exists()) {
-                boolean exist = false;
-                while (!exist) {
-                    System.out.println("File yang anda masukkan tidak ada");
-                    System.out.print("Masukkan nama file yang valid: ");
-                    fileName = globalScanner.nextLine();
-                    tempFilePath = filePath + fileName;
-                    File fileToInput = new File(tempFilePath);
-                    exist = fileToInput.exists();
-                }
+
+            boolean exist = testFile.exists();
+            while (!exist) {
+                System.out.println("File yang anda masukkan tidak ada");
+                System.out.print("Masukkan nama file yang valid: ");
+                fileName = globalScanner.nextLine();
+                tempFilePath = filePath + fileName;
+                File fileToInput = new File(tempFilePath);
+                exist = fileToInput.exists();
             }
         }
 
@@ -302,16 +302,15 @@ public class Menu {
             fileName = globalScanner.nextLine();
             tempFilePath = filePath + fileName;
             File testFile = new File(tempFilePath);
-            if (!testFile.exists()) {
-                boolean exist = false;
-                while (!exist) {
-                    System.out.println("File yang anda masukkan tidak ada");
-                    System.out.print("Masukkan nama file yang valid: ");
-                    fileName = globalScanner.nextLine();
-                    tempFilePath = filePath + fileName;
-                    File fileToInput = new File(tempFilePath);
-                    exist = fileToInput.exists();
-                }
+
+            boolean exist = testFile.exists();
+            while (!exist) {
+                System.out.println("File yang anda masukkan tidak ada");
+                System.out.print("Masukkan nama file yang valid: ");
+                fileName = globalScanner.nextLine();
+                tempFilePath = filePath + fileName;
+                File fileToInput = new File(tempFilePath);
+                exist = fileToInput.exists();
             }
         }
 
@@ -333,26 +332,70 @@ public class Menu {
 
         String filePath = "", tempFilePath = "", fileName;
         boolean fromFile = (choiceInput == 1);
-        if (choiceInput == 1) {
+        if (fromFile) {
             filePath = System.getProperty("user.dir") + "\\test\\";
             System.out.print("Masukkan nama file txt: ");
             fileName = globalScanner.nextLine();
             tempFilePath = filePath + fileName;
             File testFile = new File(tempFilePath);
-            if (!testFile.exists()) {
-                boolean exist = false;
-                while (!exist) {
-                    System.out.println("File yang anda masukkan tidak ada");
-                    System.out.print("Masukkan nama file yang valid: ");
-                    fileName = globalScanner.nextLine();
-                    tempFilePath = filePath + fileName;
-                    File fileToInput = new File(tempFilePath);
-                    exist = fileToInput.exists();
-                }
+
+            boolean exist = testFile.exists();
+            while (!exist) {
+                System.out.println("File yang anda masukkan tidak ada");
+                System.out.print("Masukkan nama file yang valid: ");
+                fileName = globalScanner.nextLine();
+                tempFilePath = filePath + fileName;
+                File fileToInput = new File(tempFilePath);
+                exist = fileToInput.exists();
             }
         }
 
         Regression.runRegression(fromFile, tempFilePath);
+    }
+
+    public static void scalingImageProcedure(Scanner globalScanner) {
+        System.out.println("---------Memperbesar Gambar---------");
+        
+        String filePath = "", tempFilePath = "", fileName;
+        filePath = System.getProperty("user.dir") + "\\test\\";
+        System.out.println("Masukkan nama file (jpg/png/other img files) yang akan anda perbesar :");
+        fileName = globalScanner.nextLine();
+        tempFilePath = filePath + fileName;
+        File testFile = new File(tempFilePath);
+
+        boolean exist = testFile.exists();
+        while (!exist) {
+            System.out.println("File yang anda masukkan tidak ada");
+            System.out.print("Masukkan nama file yang valid: ");
+            fileName = globalScanner.nextLine();
+            tempFilePath = filePath + fileName;
+            File fileToInput = new File(tempFilePath);
+            exist = fileToInput.exists();
+        }
+
+        System.out.println("Masukkan faktor pembesar (bilangan bulat) : ");
+        int n = globalScanner.nextInt();
+
+        Matrix imageMatrix = ImageScaling.getImageMatrix(tempFilePath);
+        Matrix borderedImageMatrix = ImageScaling.getBorderedMatrix(imageMatrix);
+        Matrix scaledImageMatrix = ImageScaling.getScaledMatrix(borderedImageMatrix, n);
+
+        String outputFilePath = "", outputFileName;
+        System.out.println("Masukkan nama file gambar yang telah diperbesar :");
+        outputFileName = globalScanner.nextLine();
+        outputFilePath = tempFilePath + outputFileName;
+
+        System.out.println("Masukkan jenis gambar (jpg/png) :");
+        String imageType = globalScanner.nextLine();
+        boolean valid = imageType == "jpg" || imageType == "png";
+        while (!valid) {
+            System.out.println("Jenis gambar yang anda masukkan tidak valid!");
+            System.out.print("Masukkan jenis gambar yang valid (jpg/png): ");
+            imageType = globalScanner.nextLine();
+            valid = imageType == "jpg" || imageType == "png";
+        }
+
+        ImageScaling.convertMatrix(scaledImageMatrix, outputFilePath, imageType);
     }
 
 }

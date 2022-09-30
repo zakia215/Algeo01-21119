@@ -10,7 +10,7 @@ public class Bicubic {
         int curX = -1, curY = -1, curRow = 0, curCol = 0;
         Matrix bm = new Matrix(16, 16);
         double a, b, toInsert;
-
+        
         while (curY <= 2) {
             curX = -1;
             while (curX <= 2) {
