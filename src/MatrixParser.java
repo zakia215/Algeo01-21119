@@ -6,10 +6,10 @@ public class MatrixParser {
     private String lines;
     private AugmentedMatrix parsedMatrix;
 
-    public MatrixParser(String filePath, boolean bicubic) {
+    public MatrixParser(String filePath, boolean bicubic, boolean regression) {
         this.filePath = filePath;
-        readLines(bicubic);
-        parseMatrix(bicubic);
+        readLines(bicubic, regression);
+        parseMatrix(bicubic, regression);
     }
 
     public void setFilePath(String filePath) {
@@ -40,7 +40,7 @@ public class MatrixParser {
      * readLines() passes no parameter and return the number of lines that are in the txt file. Assumed the filePath 
      * field is not empty. Also sets the lines field with all the lines in the text file seperated by a new line.
      */
-    public int readLines(boolean bicubic) {
+    public int readLines(boolean bicubic, boolean regression) {
         int i = 0;
         try {
             File inputFile = new File(this.getFilePath());
@@ -57,6 +57,8 @@ public class MatrixParser {
         }
         if (bicubic) {
             i -= 1;
+        } else if (regression) {
+            i -= ((getCol(getLines(), false, true)) - 1);
         }
         return i;
     }
@@ -65,8 +67,19 @@ public class MatrixParser {
      * Returns the number of columns that are in the matrix that is read in the txt file. Assumed that we already set
      * the line field.
      */
-    public int getCol(String t, boolean bicubic) {
-        int i = 0, row = readLines(bicubic);
+    public int getCol(String t, boolean bicubic, boolean regression ) {
+        if (regression) {
+            int i = 0;
+            Scanner doubleCounter = new Scanner(t);
+            String firstLine = doubleCounter.nextLine();
+            Scanner colCounter = new Scanner(firstLine);
+            while(colCounter.hasNextDouble()) {
+                colCounter.nextDouble();
+                i += 1;
+            }
+            return i;
+        }
+        int i = 0, row = readLines(bicubic, false), j = 0;
         Scanner doubleCounter = new Scanner(t);
         while (doubleCounter.hasNextDouble()) {
             doubleCounter.nextDouble();
@@ -83,8 +96,8 @@ public class MatrixParser {
     /**
      * Returns the matrix in the lines field and turns it into a matrix object.
      */
-    public void parseMatrix(boolean bicubic) {
-        int row = readLines(bicubic), col = getCol(getLines(), bicubic);
+    public void parseMatrix(boolean bicubic, boolean regression) {
+        int row = readLines(bicubic, regression), col = getCol(getLines(), bicubic, regression);
         AugmentedMatrix m = new AugmentedMatrix(row, col);
         Scanner doubleReader = new Scanner(getLines());
         for (int i = 0; i < row; i++) {
@@ -99,7 +112,7 @@ public class MatrixParser {
     }
 
     public AugmentedMatrix getInterpolationMatrix() {
-        int row = this.readLines(false), col = this.readLines(false) + 1;
+        int row = this.readLines(false, true), col = this.readLines(false, true) + 1;
         double toInsert;
         AugmentedMatrix inter = new AugmentedMatrix(row, col);
 
@@ -121,7 +134,7 @@ public class MatrixParser {
     }
 
     public AugmentedMatrix getRegressionMatrix() {
-        int row = getCol(getLines(), false), col = row + 1, n = readLines(false);
+        int row = getCol(getLines(), false, true), col = row + 1, n = readLines(false, true);
         double curSum, a, b;
         AugmentedMatrix rm = new AugmentedMatrix(row, col);
 
@@ -145,7 +158,6 @@ public class MatrixParser {
             }
         }
 
-        setParsedMatrix(rm);
         return rm;
     }
 
@@ -185,4 +197,31 @@ public class MatrixParser {
         valueScanner.close();
         return result;
     }
+
+    public double[] getRegressionPoint() {
+        double[] result = new double[getParsedMatrix().getColNum() - 1];
+        Scanner valueScanner = new Scanner(getLines());
+
+        for (int i = 0; i < getParsedMatrix().getRowNum(); i++) {
+            valueScanner.nextLine();
+        }
+        for (int i = 0; i < (getParsedMatrix().getColNum() - 1); i++) {
+            result[i] = valueScanner.nextDouble();
+        }
+
+        return result;
+    }
+
+    public double getInterpolationPoint() {
+        double result;
+        Scanner valueScanner = new Scanner(getLines());
+
+        for (int i = 0; i < getParsedMatrix().getRowNum(); i++) {
+            valueScanner.nextLine();
+        }
+        result = valueScanner.nextDouble();
+
+        return result;
+    }
+
 }

@@ -60,17 +60,18 @@ public class Interpolation {
     }
 
     public static void runInterpolation(boolean file, String filePath) {
-        Scanner valueScanner = new Scanner(System.in);
         AugmentedMatrix im;
         double[] resultCoefficient;
         String equationLine;
         double toPredict, predictedValue;
 
         if (file) {
-            MatrixParser parsedMatrix = new MatrixParser(filePath, false);
+            MatrixParser parsedMatrix = new MatrixParser(filePath, false, true);
             im = parsedMatrix.getInterpolationMatrix();
+            im.setResultGauss(true);
             resultCoefficient = getEquation(im);
             equationLine = getEquationLine(resultCoefficient);
+            toPredict = parsedMatrix.getInterpolationPoint();
 
         } else {
             int n;
@@ -86,6 +87,8 @@ public class Interpolation {
             im = new AugmentedMatrix(n, (n + 1));
 
             int i = 0;
+
+            System.out.println("Masukkan titik-titik: ");
             while (i < n) {
                 if (imScanner.hasNextDouble()) {
                     toInsert = imScanner.nextDouble();
@@ -97,13 +100,15 @@ public class Interpolation {
                 }
                 i += 1;
             }
+
+            System.out.println("Masukkan nilai x yang ingin diprediksi nilai y-nya: ");
+            toPredict = imScanner.nextDouble();
+            im.setResultGauss(true);
             resultCoefficient = getEquation(im);
             equationLine = getEquationLine(resultCoefficient);
             imScanner.close();
         }
 
-        System.out.print("Masukkan nilai X yang ingin diprediksi nilainya: ");
-        toPredict = valueScanner.nextDouble();
         predictedValue = predictValue(toPredict, resultCoefficient);
 
         System.out.println("Persamaan yang dihasilkan: ");
