@@ -2,30 +2,71 @@ import java.util.Scanner;
 import java.io.*;
 
 public class Menu {
-
+    
     static int determinantFile = 1, inverseFile = 1, gaussFile = 1, jordanFile = 1, cramerFile = 1, inverseMethodFile = 1, interpolationFile = 1, bicubicFile = 1, regressionFile = 1;
-    public static void determinant(Scanner globalScanner) {
-        System.out.println("---------Determinan Matriks---------");
+    
+    public static void mainMenu() {
+        System.out.println("|-|-|-|-|-|-|-|     SELAMAT DATANG DI MATRIX CALC++     |-|-|-|-|-|-|-|");
+        Scanner choice = new Scanner(System.in);
+        String mainMenuList = String.join(
+            System.getProperty("line.separator"),
+            "\n---------MAIN MENU---------",
+        "Silakan pilih menu :",
+        "1. Determinan",
+        "2. Matriks Balikan",
+        "3. Sistem Persamaan Linier",
+        "4. Interpolasi Linier",
+        "5. Interpolasi Bicubic",
+        "6. Regresi Linier Berganda",
+        "7. Memperbesar Gambar",
+        "8. Keluar",
+        "Pilihan : "
+        );
+        boolean notDone = true;
+        while (notDone) {
+            System.out.print(mainMenuList);
+            int mainMenuChoice = choice.nextInt();
+            choice.nextLine();
+            switch (mainMenuChoice) {
+                case 1 -> determinantProcedure(choice);
+                case 2 -> inverseProcedure(choice);
+                case 3 -> LinearEquation(choice);
+                case 4 -> interpolationProcedure(choice);
+                case 5 -> bicubicProcedure(choice);
+                case 6 -> regressionProcedure(choice);
+                case 7 -> scalingImageProcedure(choice);
+                case 8 -> {
+                    System.out.println("PROGRAM SELESAI. HATUR SUWUN !");
+                    notDone = false;
+                }
+                default -> System.out.println("Masukan salah!");
+            }
+        }
+        choice.close();
+    }
+
+    public static void determinantProcedure(Scanner globalScanner) {
+        System.out.println("\n---------Determinan Matriks---------");
         System.out.println("Metode pencarian determinan matriks");
-        System.out.println("1. Metode Reduksi Baris\n2. Metode Kofaktor");
+        System.out.print("1. Metode Reduksi Baris\n2. Metode Kofaktor\nPilihan : ");
         int methodInput = globalScanner.nextInt();
         globalScanner.nextLine();
         while (methodInput != 1 && methodInput != 2) {
             System.out.println("Opsi yang anda masukkan salah.");
-            System.out.println("Pilih opsi metode\n1. Metode Reduksi Baris\n2. Metode Kofaktor");
+            System.out.print(">>> Pilih opsi metode\n1. Metode Reduksi Baris\n2. Metode Kofaktor\nPilihan : ");
             methodInput = globalScanner.nextInt();
             globalScanner.nextLine();
         }
 
         boolean reduksi = (methodInput == 1);
 
-        System.out.println("Pilih opsi masukan\n1. File\n2. Terminal");
+        System.out.print(">>> Pilih opsi masukan\n1. File\n2. Terminal\nPilihan : ");
 
         int choiceInput = globalScanner.nextInt();
         globalScanner.nextLine();
         while (choiceInput != 1 && choiceInput != 2) {
             System.out.println("Opsi yang anda masukkan salah.");
-            System.out.println("Pilih opsi masukan\n1. File\n2. Terminal");
+            System.out.print(">>> Pilih opsi masukan\n1. File\n2. Terminal\nPilihan : ");
             choiceInput = globalScanner.nextInt();
             globalScanner.nextLine();
         }
@@ -38,7 +79,6 @@ public class Menu {
         }
 
         Matrix toFind;
-        double determinant;
         if (!fromFile) {
             toFind = Matrix.readMatrix(globalScanner);
 
@@ -48,8 +88,7 @@ public class Menu {
         }
 
         if (reduksi) {
-            determinant = Matrix.getDeterminantReduction(toFind);
-            System.out.println("Determinan matriks: " + determinant);
+            Matrix.getDeterminantReduction(toFind, true);
         } else {
             Matrix.getCofactorDeterminant(toFind, true);
         }
@@ -79,65 +118,27 @@ public class Menu {
         return tempFilePath;
     }
 
-    public static void mainMenu() {
-        System.out.println("++++++ MAIN MENU +++++++");
-        Scanner choice = new Scanner(System.in);
-        String mainMenuList = String.join(
-            System.getProperty("line.separator"),
-        "Silakan pilih menu :",
-        "1. Determinan",
-        "2. Matriks Balikan",
-        "3. Sistem Persamaan Linier",
-        "4. Interpolasi Linier",
-        "5. Interpolasi Bicubic",
-        "6. Regresi Linier Berganda",
-        "7. Memperbesar Gambar",
-        "8. Keluar",
-        "Pilihan: "
-        );
-        boolean notDone = true;
-        while (notDone) {
-            System.out.print(mainMenuList);
-            int mainMenuChoice = choice.nextInt();
-            choice.nextLine();
-            switch (mainMenuChoice) {
-                case 1 -> determinant(choice);
-                case 2 -> inverseProcedure(choice);
-                case 3 -> LinearEquation(choice);
-                case 4 -> interpolationProcedure(choice);
-                case 5 -> bicubicProcedure(choice);
-                case 6 -> regressionProcedure(choice);
-                case 7 -> scalingImageProcedure(choice);
-                case 8 -> {
-                    System.out.println("Program selesai");
-                    notDone = false;
-                }
-                default -> System.out.println("Masukan salah!");
-            }
-        }
-        choice.close();
-    }
 
     public static void LinearEquation(Scanner globalScanner) {
-        System.out.println("---------Sistem Persamaan Linier---------");
+        System.out.println("\n---------Sistem Persamaan Linier---------");
         System.out.println("Metode penyelesaian");
-        System.out.println("1. Metode Gauss\n2. Metode Gauss-Jordan\n3. Metode Matriks Balikan\n4. Kaidah Cramer");
+        System.out.print("1. Metode Gauss\n2. Metode Gauss-Jordan\n3. Metode Matriks Balikan\n4. Kaidah Cramer\nPilihan : ");
         int methodInput = globalScanner.nextInt();
         globalScanner.nextLine();
         while (methodInput != 1 && methodInput != 2 && methodInput != 3 && methodInput != 4) {
             System.out.println("Opsi yang anda masukkan salah.");
-            System.out.println("Pilih opsi metode\n1. Metode Gauss\n2. Metode Gauss-Jordan\n3. Metode Matriks Balikan\n4. Kaidah Cramer");
+            System.out.print(">>> Pilih opsi metode\n1. Metode Gauss\n2. Metode Gauss-Jordan\n3. Metode Matriks Balikan\n4. Kaidah Cramer\nPilihan : ");
             methodInput = globalScanner.nextInt();
             globalScanner.nextLine();
         }
 
-        System.out.println("Pilih opsi masukan\n1. File\n2. Terminal");
+        System.out.print(">>> Pilih opsi masukan\n1. File\n2. Terminal\nPilihan : ");
 
         int choiceInput = globalScanner.nextInt();
         globalScanner.nextLine();
         while (choiceInput != 1 && choiceInput != 2) {
             System.out.println("Opsi yang anda masukkan salah.");
-            System.out.println("Pilih opsi masukan\n1. File\n2. Terminal");
+            System.out.print(">>> Pilih opsi masukan\n1. File\n2. Terminal\nPilihan : ");
             choiceInput = globalScanner.nextInt();
             globalScanner.nextLine();
         }
@@ -181,27 +182,27 @@ public class Menu {
     }
 
     public static void inverseProcedure(Scanner globalScanner) {
-        System.out.println("---------Inverse Matrix---------");
+        System.out.println("\n---------Inverse Matrix---------");
         System.out.println("Metode invers matriks");
-        System.out.println("1. Metode Gauss-Jordan\n2. Metode Kofaktor");
+        System.out.print("1. Metode Gauss-Jordan\n2. Metode Kofaktor\nPilihan : ");
         int methodInput = globalScanner.nextInt();
         globalScanner.nextLine();
         while (methodInput != 1 && methodInput != 2) {
             System.out.println("Opsi yang anda masukkan salah.");
-            System.out.println("Pilih opsi masukan\n1. Metode Gauss-Jordan\n2. Metode Kofaktor");
+            System.out.print(">>> Pilih opsi masukan\n1. Metode Gauss-Jordan\n2. Metode Kofaktor\nPilihan : ");
             methodInput = globalScanner.nextInt();
             globalScanner.nextLine();
         }
 
         boolean gj = (methodInput == 1);
 
-        System.out.println("Pilih opsi masukan\n1. File\n2. Terminal");
+        System.out.print(">>> Pilih opsi masukan\n1. File\n2. Terminal\nPilihan : ");
 
         int choiceInput = globalScanner.nextInt();
         globalScanner.nextLine();
         while (choiceInput != 1 && choiceInput != 2) {
             System.out.println("Opsi yang anda masukkan salah.");
-            System.out.println("Pilih opsi masukan\n1. File\n2. Terminal");
+            System.out.print(">>> Pilih opsi masukan\n1. File\n2. Terminal\nPilihan : ");
             choiceInput = globalScanner.nextInt();
             globalScanner.nextLine();
         }
@@ -246,14 +247,14 @@ public class Menu {
     }
 
     public static void interpolationProcedure(Scanner globalScanner) {
-        System.out.println("---------Interpolasi Linier---------");
-        System.out.println("Pilih opsi masukan\n1. File\n2. Terminal");
+        System.out.println("\n---------Interpolasi Linier---------");
+        System.out.print(">>> Pilih opsi masukan\n1. File\n2. Terminal\nPilihan : ");
 
         int choiceInput = globalScanner.nextInt();
         globalScanner.nextLine();
         while (choiceInput != 1 && choiceInput != 2) {
             System.out.println("Opsi yang anda masukkan salah.");
-            System.out.println("Pilih opsi masukan\n1. File\n2. Terminal");
+            System.out.print(">>> Pilih opsi masukan\n1. File\n2. Terminal\nPilihan : ");
             choiceInput = globalScanner.nextInt();
             globalScanner.nextLine();
         }
@@ -282,14 +283,14 @@ public class Menu {
     }
 
     public static void bicubicProcedure(Scanner globalScanner) {
-        System.out.println("---------Interpolasi Bicubic---------");
-        System.out.println("Pilih opsi masukan\n1. File\n2. Terminal");
+        System.out.println("\n---------Interpolasi Bicubic---------");
+        System.out.print(">>> Pilih opsi masukan\n1. File\n2. Terminal\nPilihan : ");
 
         int choiceInput = globalScanner.nextInt();
         globalScanner.nextLine();
         while (choiceInput != 1 && choiceInput != 2) {
             System.out.println("Opsi yang anda masukkan salah.");
-            System.out.println("Pilih opsi masukan\n1. File\n2. Terminal");
+            System.out.print(">>> Pilih opsi masukan\n1. File\n2. Terminal\nPilihan : ");
             choiceInput = globalScanner.nextInt();
             globalScanner.nextLine();
         }
@@ -318,14 +319,14 @@ public class Menu {
     }
 
     public static void regressionProcedure(Scanner globalScanner) {
-        System.out.println("---------Regresi Linier Berganda---------");
-        System.out.println("Pilih opsi masukan\n1. File\n2. Terminal");
+        System.out.println("\n---------Regresi Linier Berganda---------");
+        System.out.print(">>>>>> Pilih opsi masukan\n1. File\n2. Terminal\nPilihan : ");
 
         int choiceInput = globalScanner.nextInt();
         globalScanner.nextLine();
         while (choiceInput != 1 && choiceInput != 2) {
             System.out.println("Opsi yang anda masukkan salah.");
-            System.out.println("Pilih opsi masukan\n1. File\n2. Terminal");
+            System.out.print(">>> Pilih opsi masukan\n1. File\n2. Terminal\nPilihan : ");
             choiceInput = globalScanner.nextInt();
             globalScanner.nextLine();
         }
@@ -354,7 +355,7 @@ public class Menu {
     }
 
     public static void scalingImageProcedure(Scanner globalScanner) {
-        System.out.println("---------Memperbesar Gambar---------");
+        System.out.println("\n---------Memperbesar Gambar---------");
         
         String filePath = "", tempFilePath = "", fileName;
         filePath = System.getProperty("user.dir") + "\\test\\";
@@ -373,7 +374,7 @@ public class Menu {
             exist = fileToInput.exists();
         }
 
-        System.out.println("Masukkan faktor pembesar (bilangan bulat) : ");
+        System.out.println("\nMasukkan faktor pembesar (bilangan bulat) : ");
         int n = globalScanner.nextInt();
 
         Matrix imageMatrix = ImageScaling.getImageMatrix(tempFilePath);
@@ -381,18 +382,20 @@ public class Menu {
         Matrix scaledImageMatrix = ImageScaling.getScaledMatrix(borderedImageMatrix, n);
 
         String outputFilePath = "", outputFileName;
-        System.out.println("Masukkan nama file gambar yang telah diperbesar :");
+        System.out.print("\nMasukkan nama file gambar yang telah diperbesar :");
         outputFileName = globalScanner.nextLine();
+        globalScanner.nextLine();
         outputFilePath = tempFilePath + outputFileName;
 
-        System.out.println("Masukkan jenis gambar (jpg/png) :");
+        System.out.print("\nMasukkan jenis gambar (jpg/png) :");
         String imageType = globalScanner.nextLine();
-        boolean valid = imageType == "jpg" || imageType == "png";
+        globalScanner.nextLine();
+        boolean valid = (imageType == "jpg" || imageType == "png");
         while (!valid) {
             System.out.println("Jenis gambar yang anda masukkan tidak valid!");
             System.out.print("Masukkan jenis gambar yang valid (jpg/png): ");
             imageType = globalScanner.nextLine();
-            valid = imageType == "jpg" || imageType == "png";
+            valid = (imageType == "jpg" || imageType == "png");
         }
 
         ImageScaling.convertMatrix(scaledImageMatrix, outputFilePath, imageType);

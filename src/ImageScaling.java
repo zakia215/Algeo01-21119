@@ -114,7 +114,7 @@ public class ImageScaling {
         try {
             for (int i = 0; i < m.getRowNum(); i++) {
                 for (int j = 0; j < m.getColNum(); j++) {
-                    int value = (int) m.getElement(i, j);
+                    int value = ((int) m.getElement(i, j)) << 24;
                     image.setRGB(i, j, value);
                 }
             }
@@ -143,7 +143,8 @@ public class ImageScaling {
 
         for(int i = 0; i < height ; i++) {
             for(int j = 0; j < width ; j++) {
-                imageMatrix.setElement(i, j, image.getRGB(j, i));
+                int value = (image.getRGB (j, i)) >> 24 & 0xff;
+                imageMatrix.setElement(i, j, (double) value);
             }
         }
 
