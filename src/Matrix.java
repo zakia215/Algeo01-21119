@@ -156,15 +156,15 @@ public class Matrix {
         int row, col;
 
         // read number of row and col
-        System.out.print("Number of rows: ");
+        System.out.print("\nNumber of rows: ");
         row = globalScanner.nextInt();
         System.out.print("Number of columns: ");
         col = globalScanner.nextInt();
 
         // matrix initialization and read element
         AugmentedMatrix res = new AugmentedMatrix(row, col);
-        System.out.println("Enter Matrix below :");
-        System.out.println("use whitespace to separate each element in a row and enter for each row");
+        System.out.println("Enter each element of Matrix below :");
+        System.out.println("(Note : use whitespace to separate each element in a row and enter for each row)");
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < col; j++) {
                 res.setElement(i, j, globalScanner.nextDouble());
@@ -397,7 +397,7 @@ public class Matrix {
         if (!isSquare(m)) {
             m.setDeterminant(Double.NaN);
             if (output) {
-                System.out.println("Matriks bukan merupakan matriks persegi, determinan matriks tidak dapat dicari menggunakan metode kofaktor.");
+                System.out.println(">>> Matriks yang anda masukkan bukan merupakan matriks persegi : Matriks tidak memiliki determinan !");
             }
             return Double.NaN;
         }
@@ -473,9 +473,16 @@ public class Matrix {
      * Returns the determinant of a matrix using the reduction algorithm. Returns 0 if the element is zero. If there is
      * only one element in the matrix it will return that only element. Otherwise, it will return the sum multiplication
      * of the elements in the matrix's diagonal */
-    public static double getDeterminantReduction(Matrix m) {
+    public static double getDeterminantReduction(Matrix m, boolean output) {
         int n;
         double d;
+        if (!isSquare(m)) {
+            m.setDeterminant(Double.NaN);
+            if (output) {
+                System.out.println(">>> Matriks yang anda masukkan bukan merupakan matriks persegi : Matriks tidak memiliki determinan !");
+            }
+            return Double.NaN;
+        }
         if (m.countElement() == 0) { 
             return 0;
         } else if (m.countElement() == 1) {
@@ -494,6 +501,9 @@ public class Matrix {
             d *= Math.pow(-1, n);
         }
         m.setDeterminant(d);
+        if (output) {
+            System.out.println("Determinan Matriks: " + d);
+        }
         return d;
     }
 
@@ -571,7 +581,7 @@ public class Matrix {
      * Returns the inverse of m using adjoin cofactor method. If determinant is zero will return the passed matrix itself. */
     public static Matrix inverseAdjoin(Matrix m) {
         Matrix inverted;
-        double detInverted = getDeterminantReduction(m);
+        double detInverted = getDeterminantReduction(m, false);
         if (detInverted == 0 && !isSquare(m)) {
             System.out.println("Matriks tidak memiliki Invers : mengembalikan matriks kembali ");
             return m;
@@ -587,7 +597,7 @@ public class Matrix {
     /***
      * Returns the inverse of m using Gauss-Jordan elimination method. If determinant is zero will return the passed matrix itself.*/
     public static Matrix inverseGaussJordan(Matrix m) {
-        if (getDeterminantReduction(m) == 0 || !isSquare(m)){
+        if (getDeterminantReduction(m, false) == 0 || !isSquare(m)){
             System.out.println("Matriks tidak memiliki Invers : mengembalikan matriks kembali !");
             return m;
         } else {
@@ -629,7 +639,7 @@ public class Matrix {
             }
         } else {
             // check is matrix singular ?
-            if (getDeterminantReduction(A) == 0 || !isSquare(A)){
+            if (getDeterminantReduction(A, false) == 0 || !isSquare(A)){
                 if (displayOutput) {
                     System.out.println("Matriks A adalah matriks singular: tidak dapat menggunakan metode balikan!");
                 }
@@ -649,7 +659,7 @@ public class Matrix {
      * Return matrix of solution Ax = B using cramer method */
     public static Matrix setResultCramer(Matrix A, Matrix B) {
         Matrix res = new Matrix(A.getColNum(), 1);
-        double detA = getDeterminantReduction(A);
+        double detA = getDeterminantReduction(A, false);
 
         if (B.getColNum() > 1) {
             System.out.println("Matrix B tidak memenuhi (Ax = B) !");
@@ -662,7 +672,7 @@ public class Matrix {
                     for (int i = 0; i < A.getRowNum(); i++) {
                         temp.setElement(i, j, B.getElement(i, 0));
                     }
-                    res.setElement(j, 0, getDeterminantReduction(temp)/detA);
+                    res.setElement(j, 0, getDeterminantReduction(temp, false)/detA);
                 }
                 for (int i = 0; i < A.getColNum(); i++) {
                     System.out.println("X" + (i + 1) + " = " + res.getElement(i, 0));

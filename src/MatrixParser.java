@@ -68,24 +68,25 @@ public class MatrixParser {
      * the line field.
      */
     public int getCol(String t, boolean bicubic, boolean regression ) {
+        Scanner doubleCounter = new Scanner(t);
         if (regression) {
             int i = 0;
-            Scanner doubleCounter = new Scanner(t);
             String firstLine = doubleCounter.nextLine();
             Scanner colCounter = new Scanner(firstLine);
             while(colCounter.hasNextDouble()) {
                 colCounter.nextDouble();
                 i += 1;
             }
+            colCounter.close();
             return i;
         }
-        int i = 0, row = readLines(bicubic, false), j = 0;
-        Scanner doubleCounter = new Scanner(t);
+        int i = 0, row = readLines(bicubic, false);
         while (doubleCounter.hasNextDouble()) {
             doubleCounter.nextDouble();
             i += 1;
         }
         doubleCounter.close();
+        
         if (bicubic) {
             i -= 2;
         }
