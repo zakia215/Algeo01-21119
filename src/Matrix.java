@@ -204,7 +204,8 @@ public class Matrix {
 
     /**
      * print element of matrix which each column and row separated by whitespace */
-    public static void displayMatrix(Matrix m) {
+    public static String displayMatrix(Matrix m) {
+        String outputString = "";
         int lengthMax = 0;
         for (int i = 0; i < m.getRowNum(); i++) {
             for (int j = 0; j < m.getColNum(); j++) {
@@ -219,13 +220,17 @@ public class Matrix {
                 if ((double) ((int) m.getElement(i, j)) == m.getElement(i, j)) {
                     int lengthElement = (((int) m.getElement(i, j))+"").length();
                     System.out.print((" ".repeat((lengthMax-lengthElement + 1))) + (int) m.getElement(i, j));
+                    outputString = outputString.concat((" ".repeat((lengthMax-lengthElement + 1))) + (int) m.getElement(i, j));
                 } else {
                     int lengthElement = ((m.getElement(i, j))+"").length();
                     System.out.print((" ".repeat((lengthMax-lengthElement + 1))) + m.getElement(i, j));
+                    outputString = outputString.concat((" ".repeat((lengthMax-lengthElement + 1))) + m.getElement(i, j));
                 }
             }
             System.out.println();
+            outputString = outputString.concat("\n");
         }
+        return outputString;
     }
 
     /**

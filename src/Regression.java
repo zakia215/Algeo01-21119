@@ -37,7 +37,7 @@ public class Regression {
         String equation = "y =", end, start, toInsert, value;
         for (int i = 0; i < betas.length; i++) {
             if (betas[i] != 0) {
-                end = " X" + String.valueOf((i));
+                end = " X" + (i);
                 value = String.valueOf(betas[i]);
                 start = " + ";
                 if (i == 0) {
@@ -71,12 +71,14 @@ public class Regression {
         return prediction;
     }
 
-    public static void runRegression(boolean fromFile, String filePath) {
+    public static void runRegression(boolean fromFile, String filePath, Scanner globalScanner) {
         AugmentedMatrix rm, data;
         double[] betaValues, toPredict;
         String equation;
         int n, m;
         double curSum, a, b, predictedValue;
+
+        String outputDir = System.getProperty("user.dir") + "\\output\\", outputPath = Menu.getOutputFileLoc(globalScanner,outputDir);
 
         if (fromFile) {
             MatrixParser getReg = new MatrixParser(filePath, false, true);
@@ -131,15 +133,22 @@ public class Regression {
         betaValues = getBeta(rm, data);
         equation = setRegressionEquation(betaValues);
         predictedValue = predictRegressionValue(betaValues, toPredict);
+        System.out.println("Persamaan regresi:");
         System.out.println(equation);
         System.out.print("Prediksi nilai untuk ");
+        String outputContent = "Persamaan regresi:\n" + equation + "\nPrediksi nilai untuk ";
         for (int i = 0; i < rm.getRowNum() - 1; i++) {
             if (i != 0) {
                 System.out.print(", ");
+                outputContent = outputContent.concat(", ");
             }
             System.out.print("X" + (i + 1) + " = " + toPredict[i]);
+            outputContent = outputContent.concat("X" + (i + 1) + " = " + toPredict[i]);
         }
         System.out.print(" : " + predictedValue);
+        outputContent = outputContent.concat(" : " + predictedValue);
+
+        Menu.outputFile(outputContent, outputPath);
     }
 
 }

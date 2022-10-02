@@ -1,64 +1,11 @@
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 import java.io.*;
 
 public class Menu {
 
-    static int determinantFile = 1, inverseFile = 1, gaussFile = 1, jordanFile = 1, cramerFile = 1, inverseMethodFile = 1, interpolationFile = 1, bicubicFile = 1, regressionFile = 1;
-    public static void determinant(Scanner globalScanner) {
-        System.out.println("---------Determinan Matriks---------");
-        System.out.println("Metode pencarian determinan matriks");
-        System.out.println("1. Metode Reduksi Baris\n2. Metode Kofaktor");
-        int methodInput = globalScanner.nextInt();
-        globalScanner.nextLine();
-        while (methodInput != 1 && methodInput != 2) {
-            System.out.println("Opsi yang anda masukkan salah.");
-            System.out.println("Pilih opsi metode\n1. Metode Reduksi Baris\n2. Metode Kofaktor");
-            methodInput = globalScanner.nextInt();
-            globalScanner.nextLine();
-        }
-
-        boolean reduksi = (methodInput == 1);
-
-        System.out.println("Pilih opsi masukan\n1. File\n2. Terminal");
-
-        int choiceInput = globalScanner.nextInt();
-        globalScanner.nextLine();
-        while (choiceInput != 1 && choiceInput != 2) {
-            System.out.println("Opsi yang anda masukkan salah.");
-            System.out.println("Pilih opsi masukan\n1. File\n2. Terminal");
-            choiceInput = globalScanner.nextInt();
-            globalScanner.nextLine();
-        }
-
-        boolean fromFile = (choiceInput == 1);
-        String filePath = "", tempFilePath = "";
-        if (choiceInput == 1) {
-            filePath = System.getProperty("user.dir") + "\\test\\";
-            tempFilePath = getFilePath(globalScanner, filePath);
-        }
-
-        Matrix toFind;
-        double determinant;
-        if (!fromFile) {
-            toFind = Matrix.readMatrix(globalScanner);
-
-        } else {
-            MatrixParser willInverse = new MatrixParser(tempFilePath, false, false);
-            toFind = willInverse.getParsedMatrix();
-        }
-
-        if (reduksi) {
-            determinant = Matrix.getDeterminantReduction(toFind);
-            System.out.println("Determinan matriks: " + determinant);
-        } else {
-            Matrix.getCofactorDeterminant(toFind, true);
-        }
-
-
-    }
-
     public static String getFilePath(Scanner globalScanner, String fileDir) {
-        String tempFilePath = "", fileName;
+        String tempFilePath, fileName;
 
         System.out.print("Masukkan nama file txt: ");
         fileName = globalScanner.nextLine();
@@ -77,6 +24,39 @@ public class Menu {
         }
 
         return tempFilePath;
+    }
+
+    public static String getOutputFileLoc(Scanner globalScanner, String fileDir) {
+        String tempFilePath, fileName;
+
+        System.out.print("Masukkan nama file output: ");
+        fileName = globalScanner.nextLine();
+        tempFilePath = fileDir + fileName;
+        File testFile = new File(tempFilePath);
+        if (testFile.exists()) {
+            boolean exist = true;
+            while (exist) {
+                System.out.println("File yang anda masukkan sudah ada");
+                System.out.print("Masukkan nama file yang lain: ");
+                fileName = globalScanner.nextLine();
+                tempFilePath = fileDir + fileName;
+                File output = new File(tempFilePath);
+                exist = output.exists();
+            }
+        }
+
+        return tempFilePath;
+    }
+
+    public static void outputFile(String content, String fileName) {
+        try {
+            PrintWriter writer = new PrintWriter(fileName, StandardCharsets.UTF_8);
+            writer.println(content);
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("An error occurred");
+            e.printStackTrace();
+        }
     }
 
     public static void mainMenu() {
@@ -116,18 +96,20 @@ public class Menu {
         choice.close();
     }
 
-    public static void LinearEquation(Scanner globalScanner) {
-        System.out.println("---------Sistem Persamaan Linier---------");
-        System.out.println("Metode penyelesaian");
-        System.out.println("1. Metode Gauss\n2. Metode Gauss-Jordan\n3. Metode Matriks Balikan\n4. Kaidah Cramer");
+    public static void determinant(Scanner globalScanner) {
+        System.out.println("---------Determinan Matriks---------");
+        System.out.println("Metode pencarian determinan matriks");
+        System.out.println("1. Metode Reduksi Baris\n2. Metode Kofaktor");
         int methodInput = globalScanner.nextInt();
         globalScanner.nextLine();
-        while (methodInput != 1 && methodInput != 2 && methodInput != 3 && methodInput != 4) {
+        while (methodInput != 1 && methodInput != 2) {
             System.out.println("Opsi yang anda masukkan salah.");
-            System.out.println("Pilih opsi metode\n1. Metode Gauss\n2. Metode Gauss-Jordan\n3. Metode Matriks Balikan\n4. Kaidah Cramer");
+            System.out.println("Pilih opsi metode\n1. Metode Reduksi Baris\n2. Metode Kofaktor");
             methodInput = globalScanner.nextInt();
             globalScanner.nextLine();
         }
+
+        boolean reduksi = (methodInput == 1);
 
         System.out.println("Pilih opsi masukan\n1. File\n2. Terminal");
 
@@ -140,41 +122,37 @@ public class Menu {
             globalScanner.nextLine();
         }
 
-        String filePath = "", tempFilePath = "", fileName;
         boolean fromFile = (choiceInput == 1);
+        String filePath, tempFilePath = "";
         if (choiceInput == 1) {
             filePath = System.getProperty("user.dir") + "\\test\\";
             tempFilePath = getFilePath(globalScanner, filePath);
         }
 
-        AugmentedMatrix toSolve;
-        Matrix A, B;
-        String solution;
+        String outputDir = System.getProperty("user.dir") + "\\output\\", outputPath = getOutputFileLoc(globalScanner,outputDir);
+
+        Matrix toFind;
+        double determinant;
         if (!fromFile) {
-            toSolve = Matrix.readSPL(globalScanner);
+            toFind = Matrix.readMatrix(globalScanner);
+
         } else {
             MatrixParser willInverse = new MatrixParser(tempFilePath, false, false);
-            toSolve = willInverse.getParsedMatrix();
+            toFind = willInverse.getParsedMatrix();
         }
 
-        A = Matrix.disaugment(toSolve, true);
-        B = Matrix.disaugment(toSolve, false);
+        String outputFileContent = "Determinan Matriks";
 
-        System.out.println("Solusi sistem persamaan linier: ");
-        switch (methodInput) {
-            case 1 -> {
-                toSolve.setResultGauss(false);
-                solution = toSolve.getDisplayableSolution();
-                System.out.println(solution);
-            }
-            case 2 -> {
-                toSolve.setResultGauss(true);
-                solution = toSolve.getDisplayableSolution();
-                System.out.println(solution);
-            }
-            case 3 -> Matrix.setResultInvers(A, B, true);
-            case 4 -> Matrix.setResultCramer(A, B);
+        if (reduksi) {
+            determinant = Matrix.getDeterminantReduction(toFind);
+            System.out.println("Determinan matriks: " + determinant);
+            outputFileContent = outputFileContent.concat(" dengan metode reduksi baris:\n" + determinant);
+        } else {
+            determinant = Matrix.getCofactorDeterminant(toFind, true);
+            outputFileContent = outputFileContent.concat(" dengan metode ekspansi kofaktor:\n" + determinant);
         }
+
+        outputFile(outputFileContent, outputPath);
 
     }
 
@@ -204,7 +182,7 @@ public class Menu {
             globalScanner.nextLine();
         }
 
-        String filePath = "", tempFilePath = "", fileName;
+        String filePath, tempFilePath = "", fileName;
         boolean fromFile = (choiceInput == 1);
         if (choiceInput == 1) {
             filePath = System.getProperty("user.dir") + "\\test\\";
@@ -225,6 +203,8 @@ public class Menu {
             }
         }
 
+        String outputDir = System.getProperty("user.dir") + "\\output\\", outputPath = getOutputFileLoc(globalScanner,outputDir);
+
         Matrix toInverse, inverted;
         if (!fromFile) {
             toInverse = Matrix.readMatrix(globalScanner);
@@ -233,15 +213,90 @@ public class Menu {
             toInverse = willInverse.getParsedMatrix();
         }
 
+        String outputFileContent = "Matriks balikan";
+
         if (gj) {
+            outputFileContent = outputFileContent.concat(" dengan metode gauss jordan:\n");
             inverted = Matrix.inverseGaussJordan(toInverse);
         } else {
+            outputFileContent = outputFileContent.concat(" dengan metode kofaktor:\n");
             inverted = Matrix.inverseAdjoin(toInverse);
         }
+
+        outputFileContent = outputFileContent.concat(Matrix.displayMatrix(inverted));
+        outputFile(outputFileContent, outputPath);
 
         System.out.println("Matriks hasil invers: ");
         Matrix.displayMatrix(inverted);
 
+    }
+
+    public static void LinearEquation(Scanner globalScanner) {
+        System.out.println("---------Sistem Persamaan Linier---------");
+        System.out.println("Metode penyelesaian");
+        System.out.println("1. Metode Gauss\n2. Metode Gauss-Jordan\n3. Metode Matriks Balikan\n4. Kaidah Cramer");
+        int methodInput = globalScanner.nextInt();
+        globalScanner.nextLine();
+        while (methodInput != 1 && methodInput != 2 && methodInput != 3 && methodInput != 4) {
+            System.out.println("Opsi yang anda masukkan salah.");
+            System.out.println("Pilih opsi metode\n1. Metode Gauss\n2. Metode Gauss-Jordan\n3. Metode Matriks Balikan\n4. Kaidah Cramer");
+            methodInput = globalScanner.nextInt();
+            globalScanner.nextLine();
+        }
+
+        System.out.println("Pilih opsi masukan\n1. File\n2. Terminal");
+
+        int choiceInput = globalScanner.nextInt();
+        globalScanner.nextLine();
+        while (choiceInput != 1 && choiceInput != 2) {
+            System.out.println("Opsi yang anda masukkan salah.");
+            System.out.println("Pilih opsi masukan\n1. File\n2. Terminal");
+            choiceInput = globalScanner.nextInt();
+            globalScanner.nextLine();
+        }
+
+        String filePath, tempFilePath = "";
+        boolean fromFile = (choiceInput == 1);
+        if (choiceInput == 1) {
+            filePath = System.getProperty("user.dir") + "\\test\\";
+            tempFilePath = getFilePath(globalScanner, filePath);
+        }
+
+        String outputDir = System.getProperty("user.dir") + "\\output\\", outputPath = getOutputFileLoc(globalScanner,outputDir);
+
+        AugmentedMatrix toSolve;
+        Matrix A, B;
+        String solution = "";
+        if (!fromFile) {
+            toSolve = Matrix.readSPL(globalScanner);
+        } else {
+            MatrixParser willInverse = new MatrixParser(tempFilePath, false, false);
+            toSolve = willInverse.getParsedMatrix();
+        }
+
+        A = Matrix.disaugment(toSolve, true);
+        B = Matrix.disaugment(toSolve, false);
+
+        String output = "Solusi sistem persamaan linier:\n";
+
+        System.out.println("Solusi sistem persamaan linier: ");
+        switch (methodInput) {
+            case 1 -> {
+                toSolve.setResultGauss(false);
+                solution = toSolve.getDisplayableSolution();
+                System.out.println(solution);
+            }
+            case 2 -> {
+                toSolve.setResultGauss(true);
+                solution = toSolve.getDisplayableSolution();
+                System.out.println(solution);
+            }
+            case 3 -> solution = Matrix.displayMatrix(Matrix.setResultInvers(A, B, true));
+            case 4 -> solution = Matrix.displayMatrix(Matrix.setResultCramer(A, B));
+        }
+
+        output = output.concat(solution);
+        outputFile(output, outputPath);
     }
 
     public static void interpolationProcedure(Scanner globalScanner) {
@@ -257,7 +312,7 @@ public class Menu {
             globalScanner.nextLine();
         }
 
-        String filePath = "", tempFilePath = "", fileName;
+        String filePath, tempFilePath = "", fileName;
         boolean fromFile = (choiceInput == 1);
         if (choiceInput == 1) {
             filePath = System.getProperty("user.dir") + "\\test\\";
@@ -278,7 +333,11 @@ public class Menu {
             }
         }
 
-        Interpolation.runInterpolation(fromFile, tempFilePath);
+        String outputDir = System.getProperty("user.dir") + "\\output\\", outputPath = getOutputFileLoc(globalScanner,outputDir);
+
+        String outputText = Interpolation.runInterpolation(fromFile, tempFilePath, globalScanner);
+
+        outputFile(outputText, outputPath);
     }
 
     public static void bicubicProcedure(Scanner globalScanner) {
@@ -294,7 +353,7 @@ public class Menu {
             globalScanner.nextLine();
         }
 
-        String filePath = "", tempFilePath = "", fileName = "";
+        String filePath, tempFilePath = "", fileName;
         boolean fromFile = (choiceInput == 1);
         if (choiceInput == 1) {
             filePath = System.getProperty("user.dir") + "\\test\\";
@@ -331,7 +390,7 @@ public class Menu {
             globalScanner.nextLine();
         }
 
-        String filePath = "", tempFilePath = "", fileName;
+        String filePath, tempFilePath = "", fileName;
         boolean fromFile = (choiceInput == 1);
         if (choiceInput == 1) {
             filePath = System.getProperty("user.dir") + "\\test\\";
@@ -352,7 +411,7 @@ public class Menu {
             }
         }
 
-        Regression.runRegression(fromFile, tempFilePath);
+        Regression.runRegression(fromFile, tempFilePath, globalScanner);
     }
 
 }

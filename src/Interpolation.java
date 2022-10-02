@@ -59,10 +59,10 @@ public class Interpolation {
         return y;
     }
 
-    public static void runInterpolation(boolean file, String filePath) {
+    public static String runInterpolation(boolean file, String filePath, Scanner globalScanner) {
         AugmentedMatrix im;
         double[] resultCoefficient;
-        String equationLine;
+        String equationLine, toText;
         double toPredict, predictedValue;
 
         if (file) {
@@ -76,13 +76,12 @@ public class Interpolation {
         } else {
             int n;
             double toInsert;
-            Scanner imScanner = new Scanner(System.in);
 
             System.out.print("Masukkan n: ");
-            n = imScanner.nextInt();
+            n = globalScanner.nextInt();
             while (n <= 1) {
                 System.out.print("Nilai n harus lebih dari 1\nMasukkan n: ");
-                n = imScanner.nextInt();
+                n = globalScanner.nextInt();
             }
             im = new AugmentedMatrix(n, (n + 1));
 
@@ -90,23 +89,22 @@ public class Interpolation {
 
             System.out.println("Masukkan titik-titik: ");
             while (i < n) {
-                if (imScanner.hasNextDouble()) {
-                    toInsert = imScanner.nextDouble();
+                if (globalScanner.hasNextDouble()) {
+                    toInsert = globalScanner.nextDouble();
                     for (int j = 0; j < n; j++) {
                         im.setElement(i, j, Math.pow(toInsert, j));
                     }
-                    toInsert = imScanner.nextDouble();
+                    toInsert = globalScanner.nextDouble();
                     im.setElement(i, n, toInsert);
                 }
                 i += 1;
             }
 
             System.out.println("Masukkan nilai x yang ingin diprediksi nilai y-nya: ");
-            toPredict = imScanner.nextDouble();
+            toPredict = globalScanner.nextDouble();
             im.setResultGauss(true);
             resultCoefficient = getEquation(im);
             equationLine = getEquationLine(resultCoefficient);
-            imScanner.close();
         }
 
         predictedValue = predictValue(toPredict, resultCoefficient);
@@ -114,6 +112,11 @@ public class Interpolation {
         System.out.println("Persamaan yang dihasilkan: ");
         System.out.println(equationLine);
         System.out.println("Nilai yang diprediksi untuk " + toPredict + " adalah: " + predictedValue);
+
+        toText = "Persamaan yang dihasilkan:\n" + equationLine + "\n";
+        toText = toText.concat("Nilai yang diprediksi untuk " + toPredict + " adalah: " + predictedValue);
+
+        return toText;
     }
 
 }

@@ -1,5 +1,4 @@
 import java.util.Scanner;
-import java.util.regex.MatchResult;
 
 public class Bicubic {
 
@@ -7,7 +6,7 @@ public class Bicubic {
      * Returns X matrix with function f(x,y) = (x^i)(y^j) and x,y [-1, 0, 1, 2] */
     public static Matrix getBicubicX() {
 
-        int curX = -1, curY = -1, curRow = 0, curCol = 0;
+        int curX, curY = -1, curRow = 0, curCol;
         Matrix bm = new Matrix(16, 16);
         double a, b, toInsert;
 
@@ -76,6 +75,9 @@ public class Bicubic {
         Matrix xm = getBicubicX(), ym;
         double predictedValue;
         int i = -1, j, curRow = 0;
+        String outputContent;
+
+        String outputDir = System.getProperty("user.dir") + "\\output\\", outputPath = Menu.getOutputFileLoc(globalScanner,outputDir);
 
         if (fromFile) {
             MatrixParser bYMatrix = new MatrixParser(filePath, true, false);
@@ -113,6 +115,8 @@ public class Bicubic {
         }
 
         System.out.println("Nilai yang diprediksi: " + predictedValue);
+        outputContent = "Nilai yang diprediksi:\n" + predictedValue;
+        Menu.outputFile(outputContent, outputPath);
     }
 
 }
