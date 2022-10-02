@@ -144,7 +144,7 @@ public class Menu {
         String outputFileContent = "Determinan Matriks";
 
         if (reduksi) {
-            determinant = Matrix.getDeterminantReduction(toFind);
+            determinant = Matrix.getDeterminantReduction(toFind, false);
             System.out.println("Determinan matriks: " + determinant);
             outputFileContent = outputFileContent.concat(" dengan metode reduksi baris:\n" + determinant);
         } else {
