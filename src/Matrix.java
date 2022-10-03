@@ -187,13 +187,14 @@ public class Matrix {
         // matrix initialization and read element
         AugmentedMatrix res;
         Matrix a = new Matrix(row, col - 1), b = new Matrix(row, 1);
-        System.out.println("Masukkan Matriks A:");
         System.out.println("Gunakan whitespace untuk memisahkan setiap elemen dan gunakan enter untuk memisahkan setiap baris.");
+        System.out.println("Masukkan Matriks A:");
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < col - 1; j++) {
                 a.setElement(i, j, globalScanner.nextDouble());
             }
         }
+        System.out.println("Masukkan Matriks B:");
         for (int i = 0; i < row; i++) {
             b.setElement(i, 0, globalScanner.nextDouble());
         }
@@ -204,7 +205,7 @@ public class Matrix {
 
     /**
      * print element of matrix which each column and row separated by whitespace */
-    public static String displayMatrix(Matrix m) {
+    public static String displayMatrix(Matrix m, boolean output) {
         String outputString = "";
         int lengthMax = 0;
         for (int i = 0; i < m.getRowNum(); i++) {
@@ -219,15 +220,23 @@ public class Matrix {
             for (int j = 0; j < m.getColNum(); j++) {
                 if ((double) ((int) m.getElement(i, j)) == m.getElement(i, j)) {
                     int lengthElement = (((int) m.getElement(i, j))+"").length();
-                    System.out.print((" ".repeat((lengthMax-lengthElement + 1))) + (int) m.getElement(i, j));
+                    if (output) {
+                        System.out.print((" ".repeat((lengthMax-lengthElement + 1))) + (int) m.getElement(i, j));
+                    }
                     outputString = outputString.concat((" ".repeat((lengthMax-lengthElement + 1))) + (int) m.getElement(i, j));
                 } else {
                     int lengthElement = ((m.getElement(i, j))+"").length();
-                    System.out.print((" ".repeat((lengthMax-lengthElement + 1))) + m.getElement(i, j));
+                    if (output) {
+                        System.out.print((" ".repeat((lengthMax-lengthElement + 1))) + m.getElement(i, j));
+
+                    }
                     outputString = outputString.concat((" ".repeat((lengthMax-lengthElement + 1))) + m.getElement(i, j));
                 }
             }
-            System.out.println();
+            if (output) {
+                System.out.println();
+
+            }
             outputString = outputString.concat("\n");
         }
         return outputString;

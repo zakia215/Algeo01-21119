@@ -1,0 +1,2 @@
+Determinan Matriks dengan metode ekspansi kofaktor:
+31.374999999999986

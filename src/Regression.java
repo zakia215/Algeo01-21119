@@ -86,11 +86,10 @@ public class Regression {
             rm = getReg.getRegressionMatrix();
             toPredict = getReg.getRegressionPoint();
         } else {
-            Scanner regScanner = new Scanner(System.in);
             System.out.print("Masukan nilai n: ");
-            n = regScanner.nextInt();
+            n = globalScanner.nextInt();
             System.out.print("Masukan nilai m: ");
-            m = regScanner.nextInt();
+            m = globalScanner.nextInt();
             data = new AugmentedMatrix(n, (m + 1));
             rm = new AugmentedMatrix((m + 1), (m + 2));
             toPredict = new double[m];
@@ -98,16 +97,15 @@ public class Regression {
             System.out.println("Masukkan nilai x dan y dipisahkan dengan spasi");
             for (int i = 0; i < n; i++) {
                 for (int j = 0; j < m + 1; j++) {
-                    data.setElement(i, j, regScanner.nextDouble());
+                    data.setElement(i, j, globalScanner.nextDouble());
                 }
             }
 
             System.out.println("Masukkan nilai x yang ingin diprediksi: ");
             for (int i = 0; i < m; i++) {
-                toPredict[i] = regScanner.nextDouble();
+                toPredict[i] = globalScanner.nextDouble();
             }
-
-            regScanner.close();
+            globalScanner.nextLine();
 
             for (int i = 0; i < m + 1; i++) {
                 for (int j = 0; j < (m + 2); j++) {

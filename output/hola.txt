@@ -1,0 +1,6 @@
+Solusi sistem persamaan linier:
+X1 - s - t
+X2 = s
+X3 - t
+X4 = 
+X5 = t

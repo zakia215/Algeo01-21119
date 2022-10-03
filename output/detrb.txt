@@ -1,0 +1,2 @@
+Determinan Matriks dengan metode reduksi baris:
+31.375000000000057

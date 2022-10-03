@@ -1,0 +1,3 @@
+Persamaan yang dihasilkan:
+y = 0.3425333333333332 x^2 - 5.705266666666664 x + 25.79939999999999
+Nilai yang diprediksi untuk 8.75 adalah: 2.1035250000000083

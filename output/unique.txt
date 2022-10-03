@@ -1,0 +1,5 @@
+Solusi sistem persamaan linier:
+X1 = 38.6796875
+X2 = -16.375
+X3 = 27.78125
+X4 = -11.6953125

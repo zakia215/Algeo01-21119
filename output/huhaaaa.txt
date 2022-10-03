@@ -1,0 +1,6 @@
+Solusi sistem persamaan linier:
+X1 = 0.0 + - s - t
+X2 = 0 + s
+X3 = 0.0 - t
+X4 = 0.0
+X5 = 0 + t

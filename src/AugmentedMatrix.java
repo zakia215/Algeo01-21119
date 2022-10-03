@@ -155,7 +155,7 @@ public class AugmentedMatrix extends Matrix {
                     m.displayableSolution = m.displayableSolution.concat(("X" + (i + 1) + " = "));
                     j = 0;
                     while (j < 2 * params + 1) {
-                        if (j == 0 && Double.parseDouble(m.solution[i][j]) != 0) {
+                        if (j == 0) {
                             m.displayableSolution = m.displayableSolution.concat(m.solution[i][j]);
                             allZero = true;
                             for (int k = 1; k < 2 * params + 1; k+=2) {
@@ -171,11 +171,6 @@ public class AugmentedMatrix extends Matrix {
                                 j += 2;
                                 continue;
                             } else if (Double.parseDouble(m.solution[i][j]) == 1) {
-                                j += 1;
-                                continue;
-                            } else if (Double.parseDouble(m.solution[i][j]) == -1) {
-                                m.displayableSolution = m.displayableSolution.substring(0, (m.displayableSolution.length() - 2));
-                                m.displayableSolution = m.displayableSolution.concat("- ");
                                 j += 1;
                                 continue;
                             }
