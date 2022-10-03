@@ -410,6 +410,71 @@ public class Menu {
             }
         }
 
+        Regression.runRegression(fromFile, tempFilePath);
+    }
+
+    public static void scalingImageProcedure(Scanner globalScanner) {
+        System.out.println("\n---------Memperbesar Gambar---------");
+        
+        String filePath = "", tempFilePath = "", fileName;
+        filePath = System.getProperty("user.dir") + "\\test\\";
+        System.out.println("Masukkan nama file (jpg/png/other img files) yang akan anda perbesar :");
+        fileName = globalScanner.nextLine();
+        tempFilePath = filePath + fileName;
+        File testFile = new File(tempFilePath);
+        boolean fromFile = true;
+
+        boolean exist = testFile.exists();
+        while (!exist) {
+            System.out.println("File yang anda masukkan tidak ada");
+            System.out.print("Masukkan nama file yang valid: ");
+            fileName = globalScanner.nextLine();
+            tempFilePath = filePath + fileName;
+            File fileToInput = new File(tempFilePath);
+            exist = fileToInput.exists();
+        }
+
+        System.out.println("\nMasukkan faktor pembesar (bilangan bulat) : ");
+        int n = globalScanner.nextInt();
+        globalScanner.nextLine();
+
+        Matrix imageMatrixAlpha = ImageScaling.getImageMatrix(tempFilePath, 'a');
+        Matrix imageMatrixRed = ImageScaling.getImageMatrix(tempFilePath, 'r');
+        Matrix imageMatrixGreen = ImageScaling.getImageMatrix(tempFilePath, 'g');
+        Matrix imageMatrixBlue = ImageScaling.getImageMatrix(tempFilePath, 'b');
+
+        int imageType = ImageScaling.getImageType(tempFilePath);
+
+        Matrix borderedImageMatrixAlpha = ImageScaling.getBorderedMatrix(imageMatrixAlpha);
+        Matrix borderedImageMatrixRed = ImageScaling.getBorderedMatrix(imageMatrixRed);
+        Matrix borderedImageMatrixGreen = ImageScaling.getBorderedMatrix(imageMatrixGreen);
+        Matrix borderedImageMatrixBlue = ImageScaling.getBorderedMatrix(imageMatrixBlue);
+
+        Matrix scaledImageMatrixAlpha = ImageScaling.getScaledMatrix(borderedImageMatrixAlpha, n);
+        Matrix scaledImageMatrixRed = ImageScaling.getScaledMatrix(borderedImageMatrixRed, n);
+        Matrix scaledImageMatrixGreen = ImageScaling.getScaledMatrix(borderedImageMatrixGreen, n);
+        Matrix scaledImageMatrixBlue = ImageScaling.getScaledMatrix(borderedImageMatrixBlue, n);
+
+        String outputFilePath = "", outputFileName;
+        System.out.print("\nMasukkan nama file gambar yang telah diperbesar :");
+        outputFileName = globalScanner.nextLine();
+
+        filePath = System.getProperty("user.dir") + "\\test\\";
+        outputFilePath = filePath + outputFileName;
+
+        System.out.print("\nMasukkan jenis gambar (jpg/png) :");
+        String tipeGambar = globalScanner.nextLine();
+
+        boolean valid = tipeGambar.equals("png") || tipeGambar.equals("jpg");
+        while (valid == false) {
+            System.out.println("Jenis gambar yang anda masukkan tidak valid!");
+            System.out.print("Masukkan jenis gambar yang valid (jpg/png): ");
+            tipeGambar = globalScanner.nextLine();
+            valid = (tipeGambar == "jpg" || tipeGambar == "png");
+        }
+
+        ImageScaling.convertMatrix(scaledImageMatrixAlpha, scaledImageMatrixRed, scaledImageMatrixGreen, scaledImageMatrixBlue, outputFilePath, imageType, tipeGambar);
+        System.out.println("selesai");
         Regression.runRegression(fromFile, tempFilePath, globalScanner);
     }
 

@@ -20,7 +20,7 @@
 - [Java Development Kit](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
 
 ## Maintainers : Ngoding Dekk
-This program is develop and maintain by Ngoding Dekk team
+This program is develop and maintain by Ngoding Dekk team.
 
 | NIM      | Nama                    |
 |----------|-------------------------|
