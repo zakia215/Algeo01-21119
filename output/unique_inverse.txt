@@ -1,0 +1,6 @@
+Solusi sistem persamaan linier:
+  38.6796875
+     -16.375
+    27.78125
+ -11.6953125
+
