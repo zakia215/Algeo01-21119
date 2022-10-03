@@ -1,5 +1,5 @@
 import java.util.*;
-
+import java.lang.Math;
 // import java.io.*;
 
 public class Matrix {
@@ -208,8 +208,17 @@ public class Matrix {
         int lengthMax = 0;
         for (int i = 0; i < m.getRowNum(); i++) {
             for (int j = 0; j < m.getColNum(); j++) {
-                if ((m.getElement(i, j)+"").length() > lengthMax) {
-                    lengthMax = ((m.getElement(i, j))+"").length();
+                if ((double) ((int) m.getElement(i, j)) == m.getElement(i, j)) {
+                    int lengthElement = (((int) m.getElement(i, j))+"").length();
+                    if (lengthElement > lengthMax) {
+                        lengthMax = lengthElement;
+                    }
+                } else {
+                    double value = Math.round(m.getElement(i, j) * 100000) / 100000.0 ;
+                    int lengthElement = (value+"").length();
+                    if (lengthElement > lengthMax) {
+                        lengthMax = lengthElement;
+                    }
                 }
             }
         }
@@ -220,8 +229,9 @@ public class Matrix {
                     int lengthElement = (((int) m.getElement(i, j))+"").length();
                     System.out.print((" ".repeat((lengthMax-lengthElement + 1))) + (int) m.getElement(i, j));
                 } else {
-                    int lengthElement = ((m.getElement(i, j))+"").length();
-                    System.out.print((" ".repeat((lengthMax-lengthElement + 1))) + m.getElement(i, j));
+                    double value = Math.round(m.getElement(i, j) * 100000) / 100000.0 ; 
+                    int lengthElement = ((value)+"").length();
+                    System.out.print((" ".repeat((lengthMax-lengthElement + 1))) + value);
                 }
             }
             System.out.println();

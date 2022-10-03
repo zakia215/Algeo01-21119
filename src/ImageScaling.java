@@ -63,12 +63,6 @@ public class ImageScaling {
         return interpolater;
     }
 
-    // convert borderedMatrix index to outputMatrix
-    public static int OriginalToScaled(double delta, int n) {
-        return (int)(delta*n + 1.5);
-    }
-
-
     public static Matrix getScaledMatrix(Matrix borderedMatrix, int n) {
         Matrix X = Bicubic.getBicubicX();
         double[] koef = null;
@@ -95,7 +89,7 @@ public class ImageScaling {
                     if (originalRowIndex_i != tempI || originalColumnIndex_j != tempJ) {
                         koef = Bicubic.getCoefficient(X, getInterpolaterMatrix(borderedMatrix, originalRowIndex_i, originalColumnIndex_j));
                     }
-                    double value = Bicubic.predictBicubicValue(x, y, koef);
+                    double value = Bicubic.predictBicubicValue(y, x, koef);
                     scaledM.setElement(i, j, value);
 
                     tempI = originalRowIndex_i;
@@ -108,25 +102,28 @@ public class ImageScaling {
     }
 
     /* ***  IMAGE PROCESSING *** */
-    public static void convertMatrix(Matrix m, String filePath, String imageType) {
-        BufferedImage image = new BufferedImage(m.getColNum(), m.getRowNum(), BufferedImage.TYPE_INT_ARGB);
+    public static void convertMatrix(Matrix A, Matrix R, Matrix G, Matrix B, String filePath, int imageType, String tipeGambar) {
+        BufferedImage image = new BufferedImage(A.getColNum(), A.getRowNum(), imageType);
         File outputFile = new File(filePath);
         try {
-            for (int i = 0; i < m.getRowNum(); i++) {
-                for (int j = 0; j < m.getColNum(); j++) {
-                    int value = ((int) m.getElement(i, j)) << 24;
-                    image.setRGB(i, j, value);
+            for (int i = 0; i < A.getRowNum(); i++) {
+                for (int j = 0; j < A.getColNum(); j++) {
+                    int alpha = ((int) A.getElement(i, j)) << 24; // 255 = 000000011111111 - > 111111100000000
+                    int red = ((int) R.getElement(i, j)) << 16; // 255                         000000011111111
+                    int green = ((int) G.getElement(i, j)) << 8; // 255 =                      00000000000000011111111
+                    int blue = ((int) B.getElement(i, j));
+                    image.setRGB(i, j, (alpha | red | green | blue ));
                 }
             }
-            ImageIO.write(image, imageType, outputFile);
+            ImageIO.write(image, tipeGambar, outputFile);
         }
         catch (IOException e) {
             System.out.println(e);
         }
     }
 
-    public static Matrix getImageMatrix(String pathFile) {
-        int width = 0, height = 0;
+    public static Matrix getImageMatrix(String pathFile, char color) {
+        int width = 0, height = 0, intColor;
         BufferedImage image = null;
         File inputFile = null;
         try {   
@@ -141,13 +138,38 @@ public class ImageScaling {
 
         Matrix imageMatrix = new Matrix(height, width); 
 
+        if (color == 'a') {
+            intColor = 24;
+        } else if (color == 'r') {
+            intColor = 16;
+        } else if (color == 'g') {
+            intColor = 8;
+        } else if (color == 'b') {
+            intColor = 0;
+        } else {
+            intColor = 24;
+        }
+
         for(int i = 0; i < height ; i++) {
             for(int j = 0; j < width ; j++) {
-                int value = (image.getRGB (j, i)) >> 24 & 0xff;
+                int value = (image.getRGB (i, j) >> intColor) & 0xff;
                 imageMatrix.setElement(i, j, (double) value);
             }
         }
 
         return imageMatrix;
+    }
+
+    public static int getImageType(String pathFile) {
+        BufferedImage image = null;
+        File inputFile = null;
+        try {   
+            inputFile = new File (pathFile);
+            image = ImageIO.read(inputFile);
+
+        } catch (IOException e) {
+            System.out.println("Error: " + e);
+        }
+        return image.getType();
     }
 }

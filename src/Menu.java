@@ -376,29 +376,45 @@ public class Menu {
 
         System.out.println("\nMasukkan faktor pembesar (bilangan bulat) : ");
         int n = globalScanner.nextInt();
+        globalScanner.nextLine();
 
-        Matrix imageMatrix = ImageScaling.getImageMatrix(tempFilePath);
-        Matrix borderedImageMatrix = ImageScaling.getBorderedMatrix(imageMatrix);
-        Matrix scaledImageMatrix = ImageScaling.getScaledMatrix(borderedImageMatrix, n);
+        Matrix imageMatrixAlpha = ImageScaling.getImageMatrix(tempFilePath, 'a');
+        Matrix imageMatrixRed = ImageScaling.getImageMatrix(tempFilePath, 'r');
+        Matrix imageMatrixGreen = ImageScaling.getImageMatrix(tempFilePath, 'g');
+        Matrix imageMatrixBlue = ImageScaling.getImageMatrix(tempFilePath, 'b');
+
+        int imageType = ImageScaling.getImageType(tempFilePath);
+
+        Matrix borderedImageMatrixAlpha = ImageScaling.getBorderedMatrix(imageMatrixAlpha);
+        Matrix borderedImageMatrixRed = ImageScaling.getBorderedMatrix(imageMatrixRed);
+        Matrix borderedImageMatrixGreen = ImageScaling.getBorderedMatrix(imageMatrixGreen);
+        Matrix borderedImageMatrixBlue = ImageScaling.getBorderedMatrix(imageMatrixBlue);
+
+        Matrix scaledImageMatrixAlpha = ImageScaling.getScaledMatrix(borderedImageMatrixAlpha, n);
+        Matrix scaledImageMatrixRed = ImageScaling.getScaledMatrix(borderedImageMatrixRed, n);
+        Matrix scaledImageMatrixGreen = ImageScaling.getScaledMatrix(borderedImageMatrixGreen, n);
+        Matrix scaledImageMatrixBlue = ImageScaling.getScaledMatrix(borderedImageMatrixBlue, n);
 
         String outputFilePath = "", outputFileName;
         System.out.print("\nMasukkan nama file gambar yang telah diperbesar :");
         outputFileName = globalScanner.nextLine();
-        globalScanner.nextLine();
-        outputFilePath = tempFilePath + outputFileName;
+
+        filePath = System.getProperty("user.dir") + "\\test\\";
+        outputFilePath = filePath + outputFileName;
 
         System.out.print("\nMasukkan jenis gambar (jpg/png) :");
-        String imageType = globalScanner.nextLine();
-        globalScanner.nextLine();
-        boolean valid = (imageType == "jpg" || imageType == "png");
-        while (!valid) {
+        String tipeGambar = globalScanner.nextLine();
+
+        boolean valid = tipeGambar.equals("png") || tipeGambar.equals("jpg");
+        while (valid == false) {
             System.out.println("Jenis gambar yang anda masukkan tidak valid!");
             System.out.print("Masukkan jenis gambar yang valid (jpg/png): ");
-            imageType = globalScanner.nextLine();
-            valid = (imageType == "jpg" || imageType == "png");
+            tipeGambar = globalScanner.nextLine();
+            valid = (tipeGambar == "jpg" || tipeGambar == "png");
         }
 
-        ImageScaling.convertMatrix(scaledImageMatrix, outputFilePath, imageType);
+        ImageScaling.convertMatrix(scaledImageMatrixAlpha, scaledImageMatrixRed, scaledImageMatrixGreen, scaledImageMatrixBlue, outputFilePath, imageType, tipeGambar);
+        System.out.println("selesai");
     }
 
 }
