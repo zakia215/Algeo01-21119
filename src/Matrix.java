@@ -236,10 +236,8 @@ public class Matrix {
                 } else {
                     double value = Math.round(m.getElement(i, j) * 100000) / 100000.0 ; 
                     int lengthElement = ((value)+"").length();
-                    System.out.print((" ".repeat((lengthMax-lengthElement + 1))) + value);
                     if (output) {
-                        System.out.print((" ".repeat((lengthMax-lengthElement + 1))) + m.getElement(i, j));
-
+                        System.out.print((" ".repeat((lengthMax-lengthElement + 1))) + value);
                     }
                     outputString = outputString.concat((" ".repeat((lengthMax-lengthElement + 1))) + m.getElement(i, j));
                 }
