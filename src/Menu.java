@@ -144,8 +144,7 @@ public class Menu {
         String outputFileContent = "Determinan Matriks";
 
         if (reduksi) {
-            determinant = Matrix.getDeterminantReduction(toFind, false);
-            System.out.println("Determinan matriks: " + determinant);
+            determinant = Matrix.getDeterminantReduction(toFind, true);
             outputFileContent = outputFileContent.concat(" dengan metode reduksi baris:\n" + determinant);
         } else {
             determinant = Matrix.getCofactorDeterminant(toFind, true);
@@ -223,11 +222,11 @@ public class Menu {
             inverted = Matrix.inverseAdjoin(toInverse);
         }
 
-        outputFileContent = outputFileContent.concat(Matrix.displayMatrix(inverted));
+        outputFileContent = outputFileContent.concat(Matrix.displayMatrix(inverted, false));
         outputFile(outputFileContent, outputPath);
 
         System.out.println("Matriks hasil invers: ");
-        Matrix.displayMatrix(inverted);
+        Matrix.displayMatrix(inverted, true);
 
     }
 
@@ -291,8 +290,8 @@ public class Menu {
                 solution = toSolve.getDisplayableSolution();
                 System.out.println(solution);
             }
-            case 3 -> solution = Matrix.displayMatrix(Matrix.setResultInvers(A, B, true));
-            case 4 -> solution = Matrix.displayMatrix(Matrix.setResultCramer(A, B));
+            case 3 -> solution = Matrix.displayMatrix(Matrix.setResultInvers(A, B, true), false);
+            case 4 -> solution = Matrix.displayMatrix(Matrix.setResultCramer(A, B), false);
         }
 
         output = output.concat(solution);
