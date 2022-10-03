@@ -25,7 +25,7 @@
     ```
 2. Run the jar file
    ```bash
-        java -jar Algeo01-21119.jar
+    java -jar Algeo01-21119.jar
    ```
 ## Maintainers : Ngoding Dekk
 This program is develop and maintain by Ngoding Dekk team.
