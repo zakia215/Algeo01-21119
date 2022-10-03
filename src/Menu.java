@@ -410,7 +410,7 @@ public class Menu {
             }
         }
 
-        Regression.runRegression(fromFile, tempFilePath);
+        Regression.runRegression(fromFile, tempFilePath, globalScanner);
     }
 
     public static void scalingImageProcedure(Scanner globalScanner) {
