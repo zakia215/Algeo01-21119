@@ -15,7 +15,8 @@
 5. Predicting the value in 
 6. Performing a multiple linear regression by giving the equation as well as predicting a y value based of the given x values.
 ## How to Run
-## ngoding dekk
+## Maintainers : Ngoding Dekk
+This program is develop and maintain by Ngoding Dekk team
 | NIM      | Nama                    |
 |----------|-------------------------|
 | 13521119 | Muhammad Rizky Sya'ban  |
