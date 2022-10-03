@@ -12,11 +12,12 @@
    1. Gauss-Jordan method
    2. Adjoin method
 4. Interpolating a line equation that goes through all the given points as well as predicting a y value of a given x value.
-5. Predicting the value in 
+5. Predicting a value of a function with two parameters given a 4x4 matrix and a point.
 6. Performing a multiple linear regression by giving the equation as well as predicting a y value based of the given x values.
 ## How to Run
 ## Maintainers : Ngoding Dekk
 This program is develop and maintain by Ngoding Dekk team
+
 | NIM      | Nama                    |
 |----------|-------------------------|
 | 13521119 | Muhammad Rizky Sya'ban  |
