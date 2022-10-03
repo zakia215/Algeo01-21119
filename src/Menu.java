@@ -71,7 +71,8 @@ public class Menu {
         "4. Interpolasi Linier",
         "5. Interpolasi Bicubic",
         "6. Regresi Linier Berganda",
-        "7. Keluar",
+        "7. Pembesaran Gambar",
+        "8. Keluar",
         "Pilihan: "
         );
         boolean notDone = true;
@@ -86,7 +87,8 @@ public class Menu {
                 case 4 -> interpolationProcedure(choice);
                 case 5 -> bicubicProcedure(choice);
                 case 6 -> regressionProcedure(choice);
-                case 7 -> {
+                case 7 -> scalingImageProcedure(choice);
+                case 8 -> {
                     System.out.println("Program selesai");
                     notDone = false;
                 }
@@ -475,7 +477,6 @@ public class Menu {
 
         ImageScaling.convertMatrix(scaledImageMatrixAlpha, scaledImageMatrixRed, scaledImageMatrixGreen, scaledImageMatrixBlue, outputFilePath, imageType, tipeGambar);
         System.out.println("selesai");
-        Regression.runRegression(fromFile, tempFilePath, globalScanner);
     }
 
 }
