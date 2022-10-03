@@ -14,6 +14,7 @@
 4. Interpolating a line equation that goes through all the given points as well as predicting a y value of a given x value.
 5. Predicting a value of a function with two parameters given a 4x4 matrix and a point.
 6. Performing a multiple linear regression by giving the equation as well as predicting a y value based of the given x values.
+7. Scaling Image
 ## How to Run
 ### Dependencies
 - [Java](https://www.java.com/en/download/)

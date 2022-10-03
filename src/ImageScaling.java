@@ -71,30 +71,28 @@ public class ImageScaling {
         int tempI = -3;
         int tempJ = -3;
 
-        if (n%2 == 0) {
-            for (int i = 0; i < scaledM.getRowNum(); i++) {
-                for (int j = 0; j < scaledM.getColNum(); j++) {
-                    int originalRowIndex_i = (int) Math.floor((double)(i-2) / n);
-                    int originalColumnIndex_j = (int) Math.floor((double)(j-2) / n);
-                    int rowDiff = (i-2) % n;
-                    int colDiff = (j-2) % n;
-                    if (rowDiff < 0) {
-                        rowDiff += n;
-                    }
-                    if (colDiff < 0) {
-                        colDiff += n;
-                    }
-                    double x = rowDiff * (1.0/(double)n) + 1.0/((double)n * 2);
-                    double y = colDiff * (1.0/(double)n) + 1.0/((double)n * 2);
-                    if (originalRowIndex_i != tempI || originalColumnIndex_j != tempJ) {
-                        koef = Bicubic.getCoefficient(X, getInterpolaterMatrix(borderedMatrix, originalRowIndex_i, originalColumnIndex_j));
-                    }
-                    double value = Bicubic.predictBicubicValue(y, x, koef);
-                    scaledM.setElement(i, j, value);
-
-                    tempI = originalRowIndex_i;
-                    tempJ = originalColumnIndex_j;
+        for (int i = 0; i < scaledM.getRowNum(); i++) {
+            for (int j = 0; j < scaledM.getColNum(); j++) {
+                int originalRowIndex_i = (int) Math.floor((double)(i-2) / n);
+                int originalColumnIndex_j = (int) Math.floor((double)(j-2) / n);
+                int rowDiff = (i-2) % n;
+                int colDiff = (j-2) % n;
+                if (rowDiff < 0) {
+                    rowDiff += n;
                 }
+                if (colDiff < 0) {
+                    colDiff += n;
+                }
+                double x = rowDiff * (1.0/(double)n) + 1.0/((double)n * 2);
+                double y = colDiff * (1.0/(double)n) + 1.0/((double)n * 2);
+                if (originalRowIndex_i != tempI || originalColumnIndex_j != tempJ) {
+                    koef = Bicubic.getCoefficient(X, getInterpolaterMatrix(borderedMatrix, originalRowIndex_i, originalColumnIndex_j));
+                }
+                double value = Bicubic.predictBicubicValue(y, x, koef);
+                scaledM.setElement(i, j, value);
+
+                tempI = originalRowIndex_i;
+                tempJ = originalColumnIndex_j;
             }
         }
         return scaledM;
