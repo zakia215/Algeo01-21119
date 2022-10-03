@@ -20,7 +20,7 @@
 - [Java Development Kit](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
 ### Execute the program
 1. Clone this repository
-   ```sh
+   ```bash
     git clone https://github.com/zakia215/Algeo01-21119
     ```
 2. Run the jar file
