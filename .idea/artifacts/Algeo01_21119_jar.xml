@@ -1,9 +1,9 @@
 <component name="ArtifactManager">
   <artifact type="jar" name="Algeo01-21119:jar">
-    <output-path>$PROJECT_DIR$/bin/artifacts/Algeo01_21119_jar</output-path>
+    <output-path>$PROJECT_DIR$/</output-path>
     <root id="archive" name="Algeo01-21119.jar">
       <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/META/META-INF/MANIFEST.MF" />
+        <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
       </element>
       <element id="module-output" name="Algeo01-21119" />
     </root>

@@ -71,7 +71,7 @@ public class Menu {
         "4. Interpolasi Linier",
         "5. Interpolasi Bicubic",
         "6. Regresi Linier Berganda",
-        "7. Memperbesar Gambar",
+        "7. Pembesaran Gambar",
         "8. Keluar",
         "Pilihan: "
         );
